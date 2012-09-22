@@ -1641,6 +1641,50 @@ public class Sketch {
     String maxsizeString = Base.getBoardPreferences().get("upload.maximum_size");
     if (maxsizeString == null) return;
     long maxsize = Integer.parseInt(maxsizeString);
+
+    String s =  Base.getBoardPreferences().get("upload.maximum_ram_size");
+    long maxram = s==null?-1:Integer.parseInt(s);
+
+    s =  Preferences.get("boards." + Preferences.get("board") + ".upload.warning_ram_size");
+    long warningram = maxram==-1?-1:(s==null?maxram/2:Integer.parseInt(s));
+
+    Sizer sizer = new Sizer(buildPath, suggestedClassName);
+    try {
+	size = sizer.computeSize();
+	      System.out.println(
+	I18n.format(_("Binary sketch size: {0} bytes (of a {1} byte maximum)\n\rEstimated used SRAM memory: {2} bytes{3}"),
+	  size, maxsize,sizer.data,maxram>-1?" (of a "+maxram+" byte maximum)":""));
+		
+    } catch (RunnerException e) {
+	System.err.println("Couldn't determine program size: " + e.getMessage());
+    }
+
+	if(maxram == -1)
+	{
+		System.err.println("Hint: You can set the maximum SRAM memory of your board directly in the boards.txt file");
+	}
+	else
+	{
+    if (sizer.data > maxram)
+	    throw new RunnerException(
+	    "Allowable SRAM memory exceeded; see http://www.arduino.cc/en/Reference/PROGMEM to reduce ram usage",false);
+
+    if (sizer.data > warningram)
+	  System.err.println("Warning: Large amount of SRAM memory used. Consider using PROGMEM or F(\"text\") macro to reduce ram usage");
+	}
+    if (size > maxsize)
+	throw new RunnerException(
+	  "Sketch too big; see http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it.",false);
+  }
+/*
+
+  
+  protected void legacySize(String buildPath, String suggestedClassName)
+    throws RunnerException {
+    long size = 0;
+    String maxsizeString = Base.getBoardPreferences().get("upload.maximum_size");
+    if (maxsizeString == null) return;
+    long maxsize = Integer.parseInt(maxsizeString);
     Sizer sizer = new Sizer(buildPath, suggestedClassName);
       try {
       size = sizer.computeSize();
@@ -1658,7 +1702,7 @@ public class Sketch {
       throw new RunnerException(
         _("Sketch too big; see http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."));
   }
-
+*/
 
   protected String upload(String buildPath, String suggestedClassName, boolean usingProgrammer)
     throws RunnerException, SerialException {
