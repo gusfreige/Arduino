@@ -177,7 +177,7 @@ public class Editor extends JFrame implements RunnerListener {
           // re-add the sub-menus that are shared by all windows
           fileMenu.insert(sketchbookMenu, 2);
           fileMenu.insert(examplesMenu, 3);
-          sketchMenu.insert(importMenu, 4);
+          sketchMenu.insert(importMenu, 5);
           toolsMenu.insert(boardsMenu, numTools);
           toolsMenu.insert(serialMenu, numTools + 1);
         }
@@ -634,12 +634,6 @@ public class Editor extends JFrame implements RunnerListener {
 
     sketchMenu.addSeparator();
 
-    if (importMenu == null) {
-      importMenu = new JMenu(_("Import Library..."));
-      base.rebuildImportMenu(importMenu);
-    }
-    sketchMenu.add(importMenu);
-
     item = newJMenuItem(_("Show Sketch Folder"), 'K');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -656,6 +650,48 @@ public class Editor extends JFrame implements RunnerListener {
         }
       });
     sketchMenu.add(item);
+
+	sketchMenu.addSeparator();
+
+    if (importMenu == null) {
+      importMenu = new JMenu(_("Import Library"));
+      base.rebuildImportMenu(importMenu);
+    }
+    sketchMenu.add(importMenu);
+    
+	if(!Base.isWindows()) 
+	{
+	    item = new JMenuItem(_("Manage Libraries..."));
+	    item.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+          
+				try {
+					(new Thread(new Runnable() { 
+					public void run() { 
+						try
+						{
+							String path = Base.getSketchbookLibrariesPath(), libs = "";
+						
+							for(File lib : Base.getLibraries())
+							{
+								if(lib.getPath().contains(path))
+									libs += (libs.length()==0? "":"|") + lib.getName();
+							}
+						
+						Process p = Runtime.getRuntime().exec(new String[] {Base.getHardwarePath() + "/../erw/" + "libman", "\"" + path + "\"","\"" + libs + "\""});
+						p.waitFor();
+						}
+						catch (Throwable t) {
+						}
+						base.rebuildImportMenu(importMenu);
+						base.rebuildExamplesMenu(examplesMenu);
+					}})).start(); 
+				} catch (Throwable t) {
+				}
+	        }
+	      });
+	    sketchMenu.add(item);
+	}
 
     return sketchMenu;
   }
@@ -1816,49 +1852,8 @@ public class Editor extends JFrame implements RunnerListener {
     stopCompoundEdit();
   }
 
-	protected String getCurrentKeyword() {
-		String text = "";
-		if (textarea.getSelectedText() != null)
-			text = textarea.getSelectedText().trim();
 
-		try {
-			int current = textarea.getCaretPosition();
-			int startOffset = 0;
-			int endIndex = current;
-			String tmp = textarea.getDocument().getText(current, 1);
-			// TODO probably a regexp that matches Arduino lang special chars
-			// already exists.
-			String regexp = "[\\s\\n();\\\\.!='\\[\\]{}]";
-
-			while (!tmp.matches(regexp)) {
-				endIndex++;
-				tmp = textarea.getDocument().getText(endIndex, 1);
-			}
-			// For some reason document index start at 2.
-			// if( current - start < 2 ) return;
-
-			tmp = "";
-			while (!tmp.matches(regexp)) {
-				startOffset++;
-				if (current - startOffset < 0) {
-					tmp = textarea.getDocument().getText(0, 1);
-					break;
-				} else
-					tmp = textarea.getDocument().getText(current - startOffset, 1);
-			}
-			startOffset--;
-
-			int length = endIndex - current + startOffset;
-			text = textarea.getDocument().getText(current - startOffset, length);
-			
-		} catch (BadLocationException bl) {
-			bl.printStackTrace();
-		} finally {
-			return text;
-		}
-	}
-
-	protected void handleFindReference() {
+  protected void handleFindReference() {
     String text = searchReference(textarea,true);
 
     if (text.length() == 0) {
@@ -1875,7 +1870,7 @@ public class Editor extends JFrame implements RunnerListener {
         Base.showReference(I18n.format(_("{0}.html"), referenceFile));
       }
     }
-	}
+  }
 
 
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -2212,7 +2207,7 @@ public class Editor extends JFrame implements RunnerListener {
     // Set the title of the window to "sketch_070752a - Processing 0126"
     setTitle(
       I18n.format(
-	_("{0} | Arduino {1}"),
+	_("{0}: Arduino ERW {1}g"),
 	sketch.getName(),
 	Base.VERSION_NAME
       )
