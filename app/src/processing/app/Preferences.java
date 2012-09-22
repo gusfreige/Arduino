@@ -68,7 +68,7 @@ public class Preferences {
 
   // what to call the feller
 
-  static final String PREFS_FILE = "preferences.txt";
+  static final String PREFS_FILE = "idesettings_v1.0.e.txt";
 
 
   // prompt text stuff
@@ -213,7 +213,7 @@ public class Preferences {
     // start by loading the defaults, in case something
     // important was deleted from the user prefs
     try {
-      load(Base.getLibStream("preferences.txt"));
+      load(Base.getLibStream("idesettings_v1.0.e.txt"));
     } catch (Exception e) {
       Base.showError(null, _("Could not read default settings.\n" +
                              "You'll need to reinstall Arduino."), e);
