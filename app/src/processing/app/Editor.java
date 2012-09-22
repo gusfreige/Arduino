@@ -478,7 +478,6 @@ public class Editor extends JFrame implements RunnerListener {
     setJMenuBar(menubar);
   }
 
-
   protected JMenu buildFileMenu() {
     JMenuItem item;
     fileMenu = new JMenu(_("File"));
@@ -535,10 +534,20 @@ public class Editor extends JFrame implements RunnerListener {
       });
     fileMenu.add(saveAsMenuItem);
 
+	fileMenu.addSeparator();
+
     item = newJMenuItem(_("Upload"), 'U');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          handleExport(false);
+          handleExport(false,false);
+        }
+      });
+    fileMenu.add(item);
+    
+    item = new JMenuItem(_("Upload and then Open Serial Monitor"));
+    item.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          handleExport(false,true);
         }
       });
     fileMenu.add(item);
@@ -546,7 +555,7 @@ public class Editor extends JFrame implements RunnerListener {
     item = newJMenuItemShift(_("Upload Using Programmer"), 'U');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          handleExport(true);
+          handleExport(true,false);
         }
       });
     fileMenu.add(item);
@@ -1292,7 +1301,6 @@ public class Editor extends JFrame implements RunnerListener {
     menuItem.setAccelerator(KeyStroke.getKeyStroke(what, modifiers));
     return menuItem;
   }
-
 
   /**
    * Same as newJMenuItem(), but adds the ALT (on Linux and Windows)
@@ -2358,17 +2366,28 @@ public class Editor extends JFrame implements RunnerListener {
    * Made synchronized to (hopefully) avoid problems of people
    * hitting export twice, quickly, and horking things up.
    */
-  synchronized public void handleExport(final boolean usingProgrammer) {
+  
+  synchronized public void handleExport(final boolean usingProgrammer, final boolean showSerialMonitor) {
     //if (!handleExportCheckModified()) return;
     toolbar.activate(EditorToolbar.EXPORT);
     console.clear();
     status.progress(_("Uploading to I/O Board..."));
-
+	
+	if(!usingProgrammer)
+		exportHandler = new DefaultExportHandler(showSerialMonitor);
+		
     new Thread(usingProgrammer ? exportAppHandler : exportHandler).start();
   }
 
   // DAM: in Arduino, this is upload
   class DefaultExportHandler implements Runnable {
+  	Boolean _openSerial = false;
+  	DefaultExportHandler(Boolean openSerial) { 
+  		_openSerial = openSerial; // Open serial monitor when ending
+  	}
+  	DefaultExportHandler() { 
+  		_openSerial = false; // Do not serial monitor when ending, as default
+  	}
     public void run() {
 
       try {
@@ -2380,6 +2399,11 @@ public class Editor extends JFrame implements RunnerListener {
         boolean success = sketch.exportApplet(false);
         if (success) {
           statusNotice(_("Done uploading."));
+          if(_openSerial)
+          {
+          	serialMonitor.openSerialPort();
+        	serialMonitor.setVisible(true);
+          }
         } else {
           // error message will already be visible
         }
