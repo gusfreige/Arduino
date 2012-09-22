@@ -1082,10 +1082,7 @@ public class Editor extends JFrame implements RunnerListener {
     item = newJMenuItemShift(_("Find in Reference"), 'F');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-//          if (textarea.isSelectionActive()) {
-//            handleFindReference();
-//          }
-        	handleFindReference();
+          handleFindReference();
         }
       });
     menu.add(item);
@@ -1679,6 +1676,7 @@ public class Editor extends JFrame implements RunnerListener {
    * Implements Edit &rarr; Cut.
    */
   public void handleCut() {
+  	selectLineIfNeeded();
     textarea.cut();
     sketch.setModified(true);
   }
@@ -1688,6 +1686,7 @@ public class Editor extends JFrame implements RunnerListener {
    * Implements Edit &rarr; Copy.
    */
   public void handleCopy() {
+  	selectLineIfNeeded();
     textarea.copy();
   }
 
@@ -1860,14 +1859,22 @@ public class Editor extends JFrame implements RunnerListener {
 	}
 
 	protected void handleFindReference() {
-		String text = getCurrentKeyword();
-		
-		String referenceFile = PdeKeywords.getReference(text);
-		if (referenceFile == null) {
-			statusNotice(I18n.format(_("No reference available for \"{0}\""), text));
-		} else {
-			Base.showReference(I18n.format(_("{0}.html"), referenceFile));
-		}
+    String text = searchReference(textarea,true);
+
+    if (text.length() == 0) {
+      statusNotice(_("First select a word to find in the reference."));
+
+    } else {
+      String referenceFile = PdeKeywords.getReference(text);
+      if (referenceFile == null) 
+      {
+        statusNotice(I18n.format(_("No reference available for \"{0}\""), text));
+      } 
+      else 
+      {
+        Base.showReference(I18n.format(_("{0}.html"), referenceFile));
+      }
+    }
 	}
 
 
@@ -2794,7 +2801,8 @@ public class Editor extends JFrame implements RunnerListener {
 
     // if no text is selected, disable copy and cut menu items
     public void show(Component component, int x, int y) {
-      int lineNo = textarea.getLineOfOffset(textarea.xyToOffset(x, y));
+      int offset2 = textarea.xyToOffset(x, y);
+      int lineNo = textarea.getLineOfOffset(offset2);
       int offset = textarea.xToOffset(lineNo, x);
       String line = textarea.getLineText(lineNo);
       clickedURL = textarea.checkClickedURL(line, offset);
@@ -2807,20 +2815,126 @@ public class Editor extends JFrame implements RunnerListener {
       }
       
       if (textarea.isSelectionActive()) {
-        cutItem.setEnabled(true);
+      	// move caret if is not inside selection
+      	int selStart = textarea.getSelectionStart();
+      	//System.out.println("Fixing position to: " + offset2 + " selection is: " +selStart + " to " + (((int)textarea.getSelectedText().length())+selStart));
+      		
+      	if(!(selStart<offset2 && (int)textarea.getSelectedText().length()+selStart>offset2))
+      		textarea.setCaretPosition(offset2);
+      	
+        /*cutItem.setEnabled(true);
         copyItem.setEnabled(true);
-        discourseItem.setEnabled(true);
-
+        discourseItem.setEnabled(true);*/
       } else {
-        cutItem.setEnabled(false);
+      	textarea.setCaretPosition(offset2);
+        /*cutItem.setEnabled(false);
         copyItem.setEnabled(false);
-        discourseItem.setEnabled(false);
+        discourseItem.setEnabled(false);*/
       }
       
-      referenceFile = PdeKeywords.getReference(getCurrentKeyword());
-      referenceItem.setEnabled(referenceFile != null);
+      	// Reference
+      	referenceFile = searchReference(textarea);
+      	referenceItem.setEnabled(referenceFile != null);
       
       super.show(component, x, y);
     }
   }
+  
+  	// Selects a complete line if nothing is selected
+	private void selectLineIfNeeded()
+	{
+		if (!isSelectionActive()) 
+		{
+		    int lineNo = textarea.getLineOfOffset(textarea.getCaretPosition());
+		    textarea.select(getLineStartOffset(lineNo), getLineStopOffset(lineNo));
+		}
+	}
+  
+  // Search a JEditTextArea for a selected reference, returning the reference is valid, or null 
+  public String searchReference(JEditTextArea jtext)
+    {
+    	return searchReference(jtext, false);
+   	}
+
+  // Search a JEditTextArea for a selected reference
+  public String searchReference(JEditTextArea jtext, boolean returnSelection)
+    {
+      String t = jtext.getText();
+      String ref = null;
+      if(t.length()>0)
+      {
+      	String sel = "";
+      	if (jtext.isSelectionActive())
+      	{
+      		sel = jtext.getSelectedText();
+      	}
+      		
+      	if(ref == null)
+      	{
+      		// Nothing is selected so we will try to find a valid keyword from caret position
+	      	int start = Math.max(0,jtext.getCaretPosition()-1);
+	      	sel = findKeyword(t,start, start);
+      	}
+      	
+      	sel = sel.trim();
+      	
+      	if(returnSelection)
+      		return sel;
+      	else
+      	{
+      	if(sel.length()>0)
+	        	ref = PdeKeywords.getReference(sel);
+      	}
+      } 	
+	  return returnSelection ? "": ref;
+    }
+    
+    // Returns true if character is valid for a reference keyword
+    private boolean isValid(char c)
+    {
+    	return (c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9') || c=='_';
+    }
+    
+    // Recursively finds a valid keyword
+    private String findKeyword(String text, int start, int end)
+    {
+    	int l = text.length();
+    	
+    	if(l>0)
+    	{
+	    	boolean validStart = true, validEnd = true;
+	    	if(start>0 && start<end)
+	    	{
+	    		if(isValid(text.charAt(start)))
+	    		{
+	    			start--;
+	    			validStart = false;	
+	    		}		
+	    	}
+	    	
+	    	if(end<l-1)
+	    	{
+	    		if(isValid(text.charAt(end)))
+	    		{
+	    			end++;
+	    			validEnd = false;	
+	    		}
+	    	}
+	    	
+	    	if(validStart && validEnd)
+	    	{
+	    		int nend = Math.min(l,end+(isValid(text.charAt(end))?1:0)), 
+	    			nstart = Math.max(0,start+(isValid(text.charAt(start))?0:1));
+	    			
+	    		if(nstart<nend && nend-nstart>0)
+	    			return text.substring(nstart,nend);
+	    	}
+	    	else
+	    	{
+	    		return findKeyword(text,start,end); // Keep looking
+	    	}
+    	}
+    	
+    	return "";
+    }
 }
