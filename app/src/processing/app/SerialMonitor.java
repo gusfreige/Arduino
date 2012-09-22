@@ -37,6 +37,8 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
   private JTextField textField;
   private JButton sendButton;
   private JCheckBox autoscrollBox;
+  private JCheckBox clearscreenBox;
+  private JCheckBox enabledBox;
   private JComboBox lineEndings;
   private JComboBox serialRates;
   private int serialRate;
@@ -107,7 +109,9 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
     pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));
     pane.setBorder(new EmptyBorder(4, 4, 4, 4));
     
+    enabledBox = new JCheckBox(_("Receiving"), true);
     autoscrollBox = new JCheckBox(_("Autoscroll"), true);
+    clearscreenBox = new JCheckBox(_("Autoclear"), false);
     
     lineEndings = new JComboBox(new String[] { _("No line ending"), _("Newline"), _("Carriage return"), _("Both NL & CR") });
     lineEndings.addActionListener(new ActionListener() {
@@ -147,7 +151,9 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
       
     serialRates.setMaximumSize(serialRates.getMinimumSize());
 
+	pane.add(enabledBox);
     pane.add(autoscrollBox);
+    pane.add(clearscreenBox);
     pane.add(Box.createHorizontalGlue());
     pane.add(lineEndings);
     pane.add(Box.createRigidArea(new Dimension(8, 0)));
@@ -219,13 +225,27 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
     }
   }
   
+  private long nextClearTime = -1;
+  
   public void message(final String s) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        textArea.append(s);
-        if (autoscrollBox.isSelected()) {
-        	textArea.setCaretPosition(textArea.getDocument().getLength());
-        }
+     	
+      	if(enabledBox.isSelected())
+      	{
+	      	if(clearscreenBox.isSelected())
+	      	{
+	      		long currentTime = System.currentTimeMillis();
+	      		if(currentTime > nextClearTime)
+	      			textArea.setText("");
+	      		nextClearTime = currentTime+950; // Not 1000
+	      	}
+	      	
+	        textArea.append(s);
+	        if (autoscrollBox.isSelected()) {
+	        	textArea.setCaretPosition(textArea.getDocument().getLength());
+	        }
+      	}
       }});
   }
 }
