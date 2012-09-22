@@ -264,10 +264,10 @@ public class Compiler implements MessageConsumer {
     for (File file : sSources) {
       String objectPath = buildPath + File.separator + file.getName() + ".o";
       objectPaths.add(new File(objectPath));
-      execAsynchronously(getCommandCompilerS(avrBasePath, includePaths,
+      execAsynchronouslyWorkingDirectory(getCommandCompilerS(avrBasePath, includePaths,
                                              file.getAbsolutePath(),
                                              objectPath,
-                                             boardPreferences));
+                                             boardPreferences),avrBasePath);
     }
  		
     for (File file : cSources) {
@@ -277,10 +277,10 @@ public class Compiler implements MessageConsumer {
         File dependFile = new File(dependPath);
         objectPaths.add(objectFile);
         if (is_already_compiled(file, objectFile, dependFile, boardPreferences)) continue;
-        execAsynchronously(getCommandCompilerC(avrBasePath, includePaths,
+        execAsynchronouslyWorkingDirectory(getCommandCompilerC(avrBasePath, includePaths,
                                                file.getAbsolutePath(),
                                                objectPath,
-                                               boardPreferences));
+                                               boardPreferences),avrBasePath);
     }
 
     for (File file : cppSources) {
@@ -290,10 +290,10 @@ public class Compiler implements MessageConsumer {
         File dependFile = new File(dependPath);
         objectPaths.add(objectFile);
         if (is_already_compiled(file, objectFile, dependFile, boardPreferences)) continue;
-        execAsynchronously(getCommandCompilerCPP(avrBasePath, includePaths,
+        execAsynchronouslyWorkingDirectory(getCommandCompilerCPP(avrBasePath, includePaths,
                                                  file.getAbsolutePath(),
                                                  objectPath,
-                                                 boardPreferences));
+                                                 boardPreferences),avrBasePath);
     }
     
     return objectPaths;
@@ -368,7 +368,11 @@ public class Compiler implements MessageConsumer {
   /**
    * Either succeeds or throws a RunnerException fit for public consumption.
    */
+   
   private void execAsynchronously(List commandList) throws RunnerException {
+  	execAsynchronouslyWorkingDirectory(commandList,null);
+  } 
+  private void execAsynchronouslyWorkingDirectory(List commandList, String directory) throws RunnerException {
     String[] command = new String[commandList.size()];
     commandList.toArray(command);
     int result = 0;
@@ -386,7 +390,11 @@ public class Compiler implements MessageConsumer {
     Process process;
     
     try {
-      process = Runtime.getRuntime().exec(command);
+    	// Working directory
+    	if(directory!=null)
+    		command[0]=command[0].replace(directory,"");
+   	
+      process = Runtime.getRuntime().exec(command,null, directory == null? null:new File(directory));
     } catch (IOException e) {
       RunnerException re = new RunnerException(e.getMessage());
       re.hideStackTrace();
