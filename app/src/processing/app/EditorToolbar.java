@@ -206,9 +206,19 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
     if (currentRollover != -1) {
       int statusY = (BUTTON_HEIGHT + g.getFontMetrics().getAscent()) / 2;
       String status = shiftPressed ? titleShift[currentRollover] : (controlPressed ? titleControl[currentRollover] : title[currentRollover]);
+           
       if (currentRollover != SERIAL)
         g.drawString(status, (buttonCount-1) * BUTTON_WIDTH + 3 * BUTTON_GAP, statusY);
       else {
+      	// Pending
+  		try
+  		{
+	  		if(editor.serialMonitor != null)
+				if(editor.serialMonitor.isOpenPending)
+					status += " (pending)";
+  		}
+  		catch(Exception ex) {}
+  		
         int statusX = x1[SERIAL] - BUTTON_GAP;
         statusX -= g.getFontMetrics().stringWidth(status);
         g.drawString(status, statusX, statusY);
@@ -356,6 +366,7 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
 
     case SERIAL:
       editor.handleSerial();
+      handleMouse(e);
       break;
     }
   }

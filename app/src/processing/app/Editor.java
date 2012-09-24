@@ -659,7 +659,7 @@ public class Editor extends JFrame implements RunnerListener {
     }
     sketchMenu.add(importMenu);
     
-	if(!Base.isWindows()) 
+	if(Base.isWindows()) 
 	{
 	    item = new JMenuItem(_("Manage Libraries..."));
 	    item.addActionListener(new ActionListener() {
@@ -2402,7 +2402,7 @@ public class Editor extends JFrame implements RunnerListener {
         boolean success = sketch.exportApplet(false);
         if (success) {
           statusNotice(_("Done uploading."));
-          if(_openSerial)
+          if(_openSerial || serialMonitor.isOpenPending)
           {
           	serialMonitor.openSerialPort();
         	serialMonitor.setVisible(true);
@@ -2502,8 +2502,11 @@ public class Editor extends JFrame implements RunnerListener {
 
 
   public void handleSerial() {
-    if (uploading) return;
-    
+    if (uploading)
+    {
+    	serialMonitor.isOpenPending = true; // Open serial when ending 
+    	return;
+    }
     try {
       serialMonitor.openSerialPort();
       serialMonitor.setVisible(true);
