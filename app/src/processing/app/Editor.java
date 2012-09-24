@@ -2384,12 +2384,13 @@ public class Editor extends JFrame implements RunnerListener {
 
   // DAM: in Arduino, this is upload
   class DefaultExportHandler implements Runnable {
-  	Boolean _openSerial = false;
+
   	DefaultExportHandler(Boolean openSerial) { 
-  		_openSerial = openSerial; // Open serial monitor when ending
+  		serialMonitor.isOpenPending = openSerial; // Open serial monitor when ending
   	}
   	DefaultExportHandler() { 
-  		_openSerial = false; // Do not serial monitor when ending, as default
+  		if(serialMonitor != null)
+  			serialMonitor.isOpenPending = false; // Do not serial monitor when ending, as default
   	}
     public void run() {
 
@@ -2402,7 +2403,7 @@ public class Editor extends JFrame implements RunnerListener {
         boolean success = sketch.exportApplet(false);
         if (success) {
           statusNotice(_("Done uploading."));
-          if(_openSerial || serialMonitor.isOpenPending)
+          if(serialMonitor.isOpenPending)
           {
           	serialMonitor.openSerialPort();
         	serialMonitor.setVisible(true);

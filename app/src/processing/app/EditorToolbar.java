@@ -211,13 +211,14 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
         g.drawString(status, (buttonCount-1) * BUTTON_WIDTH + 3 * BUTTON_GAP, statusY);
       else {
       	// Pending
-  		try
-  		{
-	  		if(editor.serialMonitor != null)
-				if(editor.serialMonitor.isOpenPending)
-					status += " (pending)";
-  		}
-  		catch(Exception ex) {}
+  		/*try
+  		{*/
+	  		//if(editor!=null)
+	  			if(editor.serialMonitor.isOpenPending!=null)
+					if(editor.serialMonitor.isOpenPending)
+						status += " (waiting for upload completion)";
+  		/*}
+  		catch(Exception ex) {}*/
   		
         int statusX = x1[SERIAL] - BUTTON_GAP;
         statusX -= g.getFontMetrics().stringWidth(status);
@@ -230,7 +231,7 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
     if (!isEnabled()) {
       screen.setColor(new Color(0,0,0,100));
       screen.fillRect(0, 0, getWidth(), getHeight());
-  }
+  	}
   }
 
 
