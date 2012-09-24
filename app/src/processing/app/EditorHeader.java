@@ -179,7 +179,7 @@ public class EditorHeader extends JComponent {
         code.getPrettyName() : code.getFileName();
 
       // if modified, add the li'l glyph next to the name
-      String text = "  " + codeName + (code.isModified() ? " \u00A7" : "  ");
+      String text = "  " + codeName + (code.isModified() ? " *" : "  ");
 
       Graphics2D g2 = (Graphics2D) g;
       int textWidth = (int)
@@ -328,26 +328,26 @@ public class EditorHeader extends JComponent {
       KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Editor.SHORTCUT_ALT_KEY_MASK);
     item.setAccelerator(ctrlAltLeft);
     // this didn't want to work consistently
-    /*
+    
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          editor.sketch.prevCode();
+          editor.sketch.handlePrevCode();
         }
       });
-    */
+    
     menu.add(item);
 
     item = new JMenuItem(_("Next Tab"));
     KeyStroke ctrlAltRight =
       KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Editor.SHORTCUT_ALT_KEY_MASK);
     item.setAccelerator(ctrlAltRight);
-    /*
+    
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          editor.sketch.nextCode();
+          editor.sketch.handleNextCode();
         }
       });
-    */
+    
     menu.add(item);
 
     Sketch sketch = editor.getSketch();
