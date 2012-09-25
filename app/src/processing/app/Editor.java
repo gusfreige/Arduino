@@ -2428,6 +2428,7 @@ public class Editor extends JFrame implements RunnerListener {
       uploading = false;
       //toolbar.clear();
       toolbar.deactivate(EditorToolbar.EXPORT);
+      serialMonitor.isOpenPending = false;
     }
   }
 
