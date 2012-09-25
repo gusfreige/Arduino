@@ -211,14 +211,9 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
         g.drawString(status, (buttonCount-1) * BUTTON_WIDTH + 3 * BUTTON_GAP, statusY);
       else {
       	// Pending
-  		/*try
-  		{*/
-	  		//if(editor!=null)
-	  			if(editor.serialMonitor.isOpenPending!=null)
-					if(editor.serialMonitor.isOpenPending)
-						status += " (waiting for upload completion)";
-  		/*}
-  		catch(Exception ex) {}*/
+		if(editor.serialMonitor.isOpenPending!=null)
+			if(editor.serialMonitor.isOpenPending)
+				status += " (Monitor will open after upload)";
   		
         int statusX = x1[SERIAL] - BUTTON_GAP;
         statusX -= g.getFontMetrics().stringWidth(status);
