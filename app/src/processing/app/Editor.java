@@ -544,7 +544,7 @@ public class Editor extends JFrame implements RunnerListener {
       });
     fileMenu.add(item);
     
-    item = new JMenuItem(_("Upload and then Open Serial Monitor"));
+    item = newJMenuItemAlt(_("Upload and then Open Serial Monitor"), 'U');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           handleExport(false,true);
