@@ -177,7 +177,7 @@ public class Editor extends JFrame implements RunnerListener {
           // re-add the sub-menus that are shared by all windows
           fileMenu.insert(sketchbookMenu, 2);
           fileMenu.insert(examplesMenu, 3);
-          sketchMenu.insert(importMenu, 5);
+          sketchMenu.insert(importMenu, 7);
           toolsMenu.insert(boardsMenu, numTools);
           toolsMenu.insert(serialMenu, numTools + 1);
         }
@@ -603,7 +603,6 @@ public class Editor extends JFrame implements RunnerListener {
     return fileMenu;
   }
 
-
   protected JMenu buildSketchMenu() {
     JMenuItem item;
     sketchMenu = new JMenu(_("Sketch"));
@@ -616,6 +615,35 @@ public class Editor extends JFrame implements RunnerListener {
       });
     sketchMenu.add(item);
 
+	sketchMenu.addSeparator();
+
+	item = new JMenuItem(_("Copy .hex File Path"));
+    item.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        	String s = sketch.getSketchHexFilePath(true);
+        	if(sketch==null?false: s.length()>0)
+        	{
+          		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(s),null);
+        	}
+        	else
+        	{
+        		 Base.showMessage(_("Verify / Compile the Sketch first"),
+                           _("There is no .hex file for this Sketch yet, \n" +
+                             "please Verify / Compile the Sketch first."));
+        	}
+        }
+      });
+    sketchMenu.add(item);
+    
+    
+    
+    item = newJMenuItemAlt(_("Show Compilation Folder"), 'R');
+    item.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          Base.openFolder(sketch.getTempBuildFolder());
+        }
+      });
+    sketchMenu.add(item);
 //    item = newJMenuItemShift("Verify / Compile (verbose)", 'R');
 //    item.addActionListener(new ActionListener() {
 //        public void actionPerformed(ActionEvent e) {
