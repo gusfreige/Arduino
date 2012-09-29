@@ -7,12 +7,12 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppID={{8220E838-DFF3-45AA-B338-EC34684489EA}
 AppName=Arduino Enhanced Release for Windows
-AppVersion=v1.0.1g
+AppVersion=v1.0.1h
 AppPublisher=Erwin Ried
 AppPublisherURL=http://servicios.ried.cl/
 AppSupportURL=http://servicios.ried.cl/
 AppUpdatesURL=http://servicios.ried.cl/
-DefaultDirName={pf}\Arduino\Arduino ERW 1.0.1g
+DefaultDirName={pf}\Arduino\Arduino ERW 1.0.1h
 DefaultGroupName=Arduino
 OutputDir=setup
 ;OutputBaseFilename=setup
@@ -39,9 +39,9 @@ Name: "installdrivers"; Description: "Show me options to Configure Board Drivers
 Source: "files\arduino-1.0.1\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\Arduino ERW 1.0.1g"; Filename: {app}\arduino.exe; 
+Name: "{group}\Arduino ERW 1.0.1h"; Filename: {app}\arduino.exe; 
 Name: "{group}\Configure Board Drivers"; Filename: {app}\drivers\DriverHelper.exe; Flags: excludefromshowinnewinstall; 
-Name: "{userdesktop}\Arduino ERW 1.0.1g"; Filename: {app}\arduino.exe; Tasks: desktopicon; 
+Name: "{userdesktop}\Arduino ERW 1.0.1h"; Filename: {app}\arduino.exe; Tasks: desktopicon; 
 
 ;[Registry]
 ;Root: HKCR; SubKey: xapfile\shell\open\; ValueType: string; ValueName: command; ValueData: "{app}\wp7-deploy.exe"; Flags: UninsDeleteKey; Tasks: xapfiletype;
