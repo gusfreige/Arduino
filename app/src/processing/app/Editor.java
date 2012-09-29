@@ -507,6 +507,7 @@ public class Editor extends JFrame implements RunnerListener {
     fileMenu.add(sketchbookMenu);
 
     if (examplesMenu == null) {
+      examplesMenu = new JMenu(_("Examples"));
       rebuildExamplesMenu();
     }
     fileMenu.add(examplesMenu);
@@ -605,7 +606,6 @@ public class Editor extends JFrame implements RunnerListener {
   }
   
   private void rebuildExamplesMenu(){
-  	  examplesMenu = new JMenu(_("Examples"));
       base.rebuildExamplesMenu(examplesMenu);
 
       int upper = 0, lower = 0;
