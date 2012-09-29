@@ -238,6 +238,7 @@ public class EditorHeader extends JComponent {
 
     } else {
       menu = new JMenu();
+      //MenuScroller.setScrollerFor(menu);
       popup = menu.getPopupMenu();
       add(popup);
       popup.setLightWeightPopupEnabled(true);

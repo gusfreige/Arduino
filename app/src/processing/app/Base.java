@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 import javax.swing.*;
+import darrylbu.util.*;
 
 import processing.app.debug.Compiler;
 import processing.app.debug.Target;
@@ -1195,6 +1196,7 @@ public class Base {
         } else {
         // not a sketch folder, but maybe a subfolder containing sketches
         JMenu submenu = new JMenu(list[i]);
+        MenuScroller.setScrollerFor(submenu);
         // needs to be separate var
         // otherwise would set ifound to false
         boolean found = addSketches(submenu, subfolder, replaceExisting);
