@@ -642,7 +642,7 @@ public class Editor extends JFrame implements RunnerListener {
 
 	sketchMenu.addSeparator();
 
-	item = new JMenuItem(_("Copy .hex File Path"));
+	item = new JMenuItem(_("Copy Hex File as Path"));
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         	String s = sketch.getSketchHexFilePath(true);
@@ -652,9 +652,8 @@ public class Editor extends JFrame implements RunnerListener {
         	}
         	else
         	{
-        		 Base.showMessage(_("Verify / Compile the Sketch first"),
-                           _("There is no .hex file for this Sketch yet, \n" +
-                             "please Verify / Compile the Sketch first."));
+        		 Base.showMessage(_("No Hex File"),
+                           _("There is no Hex for this Sketch yet. Verify the Sketch first"));
         	}
         }
       });
