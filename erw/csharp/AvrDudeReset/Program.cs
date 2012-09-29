@@ -29,37 +29,37 @@ namespace AvrDudeReset
             }
 
             // Check if port is available
-
-            if (!PortIsOk(port, bauds))
-            {
-
-                // Can't be opened
-                var p = Process.Start("avrdudefix.exe", "-parent" + ParentProc.FindParentProcess().MainWindowHandle);
-                p.WaitForExit();
-
-                switch (p.ExitCode)
+            if (port != -1 && bauds != -1)
+                if (!PortIsOk(port, bauds))
                 {
-                    case 2:
-                        Console.Error.WriteLine("Serial port 'COM{0}' already in use. Check your board or Click fix on next upload.", port);
-                        break;
-                    case 9:
-                        var timer = Stopwatch.StartNew();
 
-                        do
-                        {
-                            if (timer.ElapsedMilliseconds > 10000)
+                    // Can't be opened
+                    var p = Process.Start("avrdudefix.exe", "-parent" + ParentProc.FindParentProcess().MainWindowHandle);
+                    p.WaitForExit();
+
+                    switch (p.ExitCode)
+                    {
+                        case 2:
+                            Console.Error.WriteLine("Serial port 'COM{0}' already in use. Check your board or Click fix on next upload.", port);
+                            break;
+                        case 9:
+                            var timer = Stopwatch.StartNew();
+
+                            do
                             {
-                                Environment.Exit(1);
-                            }
-                            Thread.Sleep(1000);
-                        } while (!PortIsOk(port, bauds));
-                        break;
-                    default:
-                        Console.WriteLine("Nothing was uploaded to the board. Upload was cancelled.");
-                        Environment.Exit(0);
-                        break;
+                                if (timer.ElapsedMilliseconds > 10000)
+                                {
+                                    Environment.Exit(1);
+                                }
+                                Thread.Sleep(1000);
+                            } while (!PortIsOk(port, bauds));
+                            break;
+                        default:
+                            Console.WriteLine("Nothing was uploaded to the board. Upload was cancelled.");
+                            Environment.Exit(0);
+                            break;
+                    }
                 }
-            }
 
             _p = new Process { StartInfo = new ProcessStartInfo("avrdude2.exe", "\"" + String.Join("\" \"", args) + "\"") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow=true } , EnableRaisingEvents = true };
             _p.OutputDataReceived += p_OutputDataReceived;
