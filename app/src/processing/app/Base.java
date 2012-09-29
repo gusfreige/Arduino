@@ -28,7 +28,6 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 import javax.swing.*;
-import darrylbu.util.*;
 
 import processing.app.debug.Compiler;
 import processing.app.debug.Target;
@@ -943,7 +942,7 @@ public class Base {
   }
 
 
-  protected void rebuildToolbarMenu(JMenu menu) {
+  protected int rebuildToolbarMenu(JMenu menu) {
     JMenuItem item;
     menu.removeAll();
 
@@ -969,15 +968,25 @@ public class Base {
 
     //System.out.println("rebuilding examples menu");
     // Add each of the subfolders of examples directly to the menu
+    int n = 0;
     try {
-      boolean found = addSketches(menu, examplesFolder, true);
-      if (found) menu.addSeparator();
-      found = addSketches(menu, getSketchbookLibrariesFolder(), true);
-      if (found) menu.addSeparator();
-      addSketches(menu, librariesFolder, true);
+      JMenu temp = new JMenu("Examples");
+      boolean found = addSketches(temp, examplesFolder, true);
+      if (found) {menu.add(temp); n++;};
+
+	  temp = new JMenu("Contributed Libraries");
+      found = addSketches(temp, getSketchbookLibrariesFolder(), true);
+      if (found) {menu.add(temp); n++;};
+      
+      temp = new JMenu("Libraries");
+      addSketches(temp, librariesFolder, true);
+      menu.add(temp);
+      n++;
     } catch (IOException e) {
       e.printStackTrace();
     }
+    
+    return n;
   }
 
 
@@ -994,7 +1003,7 @@ public class Base {
   }
 
 
-  public void rebuildImportMenu(JMenu importMenu) {
+  public int rebuildImportMenu(JMenu importMenu) {
     //System.out.println("rebuilding import menu");
     importMenu.removeAll();
 
@@ -1016,14 +1025,15 @@ public class Base {
       File sketchbookLibraries = getSketchbookLibrariesFolder();
       boolean found = addLibraries(importMenu, sketchbookLibraries);
       if (found) {
-        JMenuItem contrib = new JMenuItem(_("Contributed"));
+        /*JMenuItem contrib = new JMenuItem(_("Contributed"));
         contrib.setEnabled(false);
-        importMenu.insert(contrib, separatorIndex);
+        importMenu.insert(contrib, separatorIndex);*/
         importMenu.insertSeparator(separatorIndex);
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return separatorIndex;
   }
 
 
@@ -1152,9 +1162,11 @@ public class Base {
     //menu.addActionListener(listener);
 
     boolean ifound = false;
+	boolean skipLibraryFolder = folder.equals((Base.getSketchbookFolder()));
 
     for (int i = 0; i < list.length; i++) {
-      if ((list[i].charAt(0) == '.') || list[i].startsWith("__disabled_") || list[i].equals("CVS")) continue;
+      if ((list[i].charAt(0) == '.') || list[i].startsWith("__disabled_") || list[i].equals("CVS") || 
+      	(skipLibraryFolder && list[i].compareToIgnoreCase("libraries")==0)) continue;
 
       File subfolder = new File(folder, list[i]);
       if (!subfolder.isDirectory()) continue;
@@ -1196,7 +1208,7 @@ public class Base {
         } else {
         // not a sketch folder, but maybe a subfolder containing sketches
         JMenu submenu = new JMenu(list[i]);
-        MenuScroller.setScrollerFor(submenu);
+        //MenuScroller.setScrollerFor(submenu);
         // needs to be separate var
         // otherwise would set ifound to false
         boolean found = addSketches(submenu, subfolder, replaceExisting);

@@ -50,7 +50,7 @@ public class MenuScroller {
 
   private static int getMaximumItems()
   {
-  	return (int)((java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight())/22.0);
+  	return (int)((java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight())/22)-1;//22.0
   }
 
   /**
@@ -179,7 +179,7 @@ public class MenuScroller {
    * @param menu the menu
    */
   public MenuScroller(JMenu menu) {
-    this(menu, getMaximumItems());
+    this(menu, -1);
   }
 
   /**
@@ -190,7 +190,7 @@ public class MenuScroller {
    * @param menu the popup menu
    */
   public MenuScroller(JPopupMenu menu) {
-    this(menu, getMaximumItems());
+    this(menu, -1);
   }
 
   /**
@@ -282,6 +282,13 @@ public class MenuScroller {
    */
   public MenuScroller(JPopupMenu menu, int scrollCount, int interval,
           int topFixedCount, int bottomFixedCount) {
+          	
+    if(scrollCount == -1)
+    	scrollCount = getMaximumItems()-topFixedCount-bottomFixedCount; // Autosize
+    
+    if(interval == -1)
+    	interval = 150; // Default value
+    		
     if (scrollCount <= 0 || interval <= 0) {
       throw new IllegalArgumentException("scrollCount and interval must be greater than 0");
     }
@@ -452,9 +459,9 @@ public class MenuScroller {
       for (int i = 0; i < topFixedCount; i++) {
         menu.add(menuItems[i]);
       }
-      if (topFixedCount > 0) {
+      /*if (topFixedCount > 0) {
         menu.addSeparator();
-      }
+      }*/
 
       menu.add(upItem);
       for (int i = firstIndex; i < scrollCount + firstIndex; i++) {
@@ -462,9 +469,9 @@ public class MenuScroller {
       }
       menu.add(downItem);
 
-      if (bottomFixedCount > 0) {
+      /*if (bottomFixedCount > 0) {
         menu.addSeparator();
-      }
+      }*/
       for (int i = menuItems.length - bottomFixedCount; i < menuItems.length; i++) {
         menu.add(menuItems[i]);
       }

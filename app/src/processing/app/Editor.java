@@ -216,8 +216,8 @@ public class Editor extends JFrame implements RunnerListener {
 
     if (toolbarMenu == null) {
       toolbarMenu = new JMenu();
-      MenuScroller.setScrollerFor(toolbarMenu);
-      base.rebuildToolbarMenu(toolbarMenu);
+      int n =base.rebuildToolbarMenu(toolbarMenu);
+      MenuScroller.setScrollerFor(toolbarMenu, -1,-1, 2,n>0?n+1:0);
     }
     toolbar = new EditorToolbar(this, toolbarMenu);
     upper.add(toolbar);
@@ -507,9 +507,7 @@ public class Editor extends JFrame implements RunnerListener {
     fileMenu.add(sketchbookMenu);
 
     if (examplesMenu == null) {
-      examplesMenu = new JMenu(_("Examples"));
-      MenuScroller.setScrollerFor(examplesMenu);
-      base.rebuildExamplesMenu(examplesMenu);
+      rebuildExamplesMenu();
     }
     fileMenu.add(examplesMenu);
 
@@ -605,7 +603,31 @@ public class Editor extends JFrame implements RunnerListener {
     }
     return fileMenu;
   }
+  
+  private void rebuildExamplesMenu(){
+  	  examplesMenu = new JMenu(_("Examples"));
+      base.rebuildExamplesMenu(examplesMenu);
 
+      int upper = 0, lower = 0;
+      for(int i=0;i<examplesMenu.getMenuComponentCount();i++)
+      {
+      	//System.out.println(examplesMenu.getMenuComponent(i).getClass().getName());
+      	if(examplesMenu.getMenuComponent(i).getClass().getName().contains("Separator"))
+	      	if(upper==0)
+	      	{
+		    	upper = i;
+	      	}
+	      	else
+	      	{
+	      		lower = examplesMenu.getItemCount()-i;
+	      		break;
+	      	}
+      }
+      //System.out.println("hola " + upper + " , lower " + lower);
+      MenuScroller.setScrollerFor(examplesMenu,-1,-1,upper>0?upper+1:0,lower);
+  }
+  	
+  
   protected JMenu buildSketchMenu() {
     JMenuItem item;
     sketchMenu = new JMenu(_("Sketch"));
@@ -686,8 +708,8 @@ public class Editor extends JFrame implements RunnerListener {
 
     if (importMenu == null) {
       importMenu = new JMenu(_("Import Library"));
-      MenuScroller.setScrollerFor(importMenu);
-      base.rebuildImportMenu(importMenu);
+      int n = base.rebuildImportMenu(importMenu);
+      MenuScroller.setScrollerFor(importMenu,-1,-1,n+1,0);
     }
     sketchMenu.add(importMenu);
     
@@ -717,7 +739,7 @@ public class Editor extends JFrame implements RunnerListener {
 						}
 						
 						base.rebuildImportMenu(importMenu);
-						base.rebuildExamplesMenu(examplesMenu);
+						rebuildExamplesMenu();
 						base.rebuildToolbarMenu(toolbarMenu);
 					}})).start(); 
 				} catch (Throwable t) {
