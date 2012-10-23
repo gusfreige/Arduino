@@ -109,9 +109,9 @@ begin
 end;
 
 [Run]
-Tasks: installdrivers; Filename: {app}\drivers\DriverHelper.exe; 
-Filename: {app}\erw\SetPath.exe; Parameters: "-a ""{app}\hardware\tools\avr\bin"" -r hardware\tools\avr\bin"; Flags: RunMinimized; 
-Filename: {app}\Arduino.exe; Flags: PostInstall; Description: "Open Arduino Enhanced Release for Windows"; 
+Filename: "{app}\drivers\DriverHelper.exe"; Tasks: installdrivers
+Filename: "{app}\erw\SetPath.exe"; Parameters: "-a ""{app}\hardware\tools\avr\bin"" -r hardware\tools\avr\bin"; Flags: RunMinimized
+Filename: "{app}\erw\first_run.vbs"; Flags: postinstall shellexec; Description: "Open Arduino Enhanced Release for Windows"
 
 [UninstallRun]
 Filename: {app}\erw\SetPath.exe; Parameters: "-r hardware\tools\avr\bin"; Flags: RunHidden; 
