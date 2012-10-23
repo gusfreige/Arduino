@@ -197,8 +197,6 @@ public class PdePreprocessor {
   // Write the pde program to the cpp file
   protected void writeProgram(PrintStream out, String program, List<String> prototypes) {
     int prototypeInsertionPoint = firstStatement(program);
-  
-    out.print(program.substring(0, prototypeInsertionPoint));
     out.print("#include \"Arduino.h\"\n");    
     
     // print user defined prototypes
@@ -206,6 +204,7 @@ public class PdePreprocessor {
       out.print(prototypes.get(i) + "\n");
     }
     out.println("#line 1");
+     out.print(program.substring(0, prototypeInsertionPoint));
     out.print(program.substring(prototypeInsertionPoint));
   }
 
