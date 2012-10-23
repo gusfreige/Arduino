@@ -79,6 +79,8 @@ public class Preferences {
   static final String PROMPT_OK      = _("OK");
   static final String PROMPT_BROWSE  = _("Browse");
 
+  String[] fonts = GetAllSystemFonts();
+
   String[] languages = {
                         _("System Default"),
                         "العربية" + " (" + _("Arabic") + ")",
@@ -194,8 +196,8 @@ public class Preferences {
   JCheckBox updateExtensionBox;
   JCheckBox autoAssociateBox;
   JComboBox comboLanguage;
-
-
+  JComboBox comboFont;
+  
   // the calling editor, so updates can be applied
 
   Editor editor;
@@ -206,8 +208,18 @@ public class Preferences {
   static Hashtable defaults;
   static Hashtable table = new Hashtable();;
   static File preferencesFile;
-
-
+ 
+  // Retrieves the name of all the system fonts
+  static protected String[] GetAllSystemFonts()
+  {
+  	/*ArrayList<String> fontsList = new ArrayList<String>(); 
+	for (Font f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) 
+		fontsList.add(f.getName());
+	return fontsList.toArray(new String[0]); */
+	
+	return GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+  }
+  
   static protected void init(String commandLinePrefs) {
 
     // start by loading the defaults, in case something
@@ -347,8 +359,26 @@ public class Preferences {
     comboLanguage = new JComboBox(languages);
     comboLanguage.setSelectedIndex((Arrays.asList(languagesISO)).indexOf(Preferences.get("editor.languages.current")));
     box.add(comboLanguage);
-    label = new JLabel(_("  (requires restart of Arduino)"));
+    label = new JLabel(_(" *"));
+    label.setForeground(Color.darkGray);
     box.add(label);
+    pain.add(box);
+    d = box.getPreferredSize();
+    box.setForeground(Color.gray);
+    box.setBounds(left, top, d.width, d.height);
+    right = Math.max(right, left + d.width);
+    top += d.height + GUI_BETWEEN;
+    
+    // Editor font name: [        ] (requires restart of Arduino)
+    box = Box.createHorizontalBox();
+    label = new JLabel(_("Editor font: "));
+    box.add(label);
+    comboFont = new JComboBox(fonts);
+    comboFont.setSelectedIndex((Arrays.asList(fonts)).indexOf(Preferences.get("editor.font").split("\\,")[0]));
+    box.add(comboFont);
+    /*label = new JLabel(_(" *"));
+    label.setForeground(Color.darkGray);
+    box.add(label);*/
     pain.add(box);
     d = box.getPreferredSize();
     box.setForeground(Color.gray);
@@ -363,8 +393,9 @@ public class Preferences {
     box.add(label);
     fontSizeField = new JTextField(4);
     box.add(fontSizeField);
-    label = new JLabel(_("  (requires restart of Arduino)"));
-    box.add(label);
+    /*label = new JLabel(_(" *"));
+    label.setForeground(Color.darkGray);
+    box.add(label);*/
     pain.add(box);
     d = box.getPreferredSize();
     box.setBounds(left, top, d.width, d.height);
@@ -475,6 +506,14 @@ public class Preferences {
     right = Math.max(right, left + d.width);
     top += d.height; // + GUI_SMALL;
 
+	// Requires reboot message
+	label = new JLabel(_("* Requires restart of Arduino"));
+    pain.add(label);
+    d = label.getPreferredSize();
+    label.setForeground(Color.darkGray);
+    label.setBounds(left, top, d.width, d.height*4);
+    //right = Math.max(right, left + d.width);
+    top += d.height; // + GUI_SMALL;
 
     // [  OK  ] [ Cancel ]  maybe these should be next to the message?
 
@@ -610,6 +649,7 @@ public class Preferences {
     try {
       int newSize = Integer.parseInt(newSizeText.trim());
       String pieces[] = PApplet.split(get("editor.font"), ',');
+      pieces[0] = comboFont.getSelectedItem().toString();
       pieces[2] = String.valueOf(newSize);
       set("editor.font", PApplet.join(pieces, ','));
 
