@@ -376,9 +376,9 @@ public class Preferences {
     comboFont = new JComboBox(fonts);
     comboFont.setSelectedIndex((Arrays.asList(fonts)).indexOf(Preferences.get("editor.font").split("\\,")[0]));
     box.add(comboFont);
-    /*label = new JLabel(_(" *"));
+    label = new JLabel(_(" *"));
     label.setForeground(Color.darkGray);
-    box.add(label);*/
+    box.add(label);
     pain.add(box);
     d = box.getPreferredSize();
     box.setForeground(Color.gray);
@@ -393,9 +393,9 @@ public class Preferences {
     box.add(label);
     fontSizeField = new JTextField(4);
     box.add(fontSizeField);
-    /*label = new JLabel(_(" *"));
+    label = new JLabel(_(" *"));
     label.setForeground(Color.darkGray);
-    box.add(label);*/
+    box.add(label);
     pain.add(box);
     d = box.getPreferredSize();
     box.setBounds(left, top, d.width, d.height);
@@ -507,7 +507,7 @@ public class Preferences {
     top += d.height; // + GUI_SMALL;
 
 	// Requires reboot message
-	label = new JLabel(_("* Requires restart of Arduino"));
+	label = new JLabel(_("* Requires restart of Arduino to work properly"));
     pain.add(label);
     d = label.getPreferredSize();
     label.setForeground(Color.darkGray);
