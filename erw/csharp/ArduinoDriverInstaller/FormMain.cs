@@ -135,6 +135,9 @@ namespace ArduinoDriverInstaller
             var p = new Process() { StartInfo = new ProcessStartInfo("devcon" + (Environment.Is64BitOperatingSystem ? "64" : "86") + ".exe", args) 
             { CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false } };
             p.Start();
+
+            p.BeginErrorReadLine();
+            p.BeginOutputReadLine();
             p.WaitForExit();
             return p;
         }
