@@ -9,10 +9,16 @@ namespace AvrDudeReset
     class Program
     {
         static Process _p;
+        private const string AvrDudeRealExe = "avrdude2.exe";
+        private static string _currentExe = "";
+
         static void Main(string[] args)
         {
             const string portPrefix = @"-P\\.\COM", baudsPrefix = "-b";
-            Environment.CurrentDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+
+            var exe = Process.GetCurrentProcess().MainModule.FileName;
+            _currentExe = Path.GetFileName(exe);
+            Environment.CurrentDirectory = Path.GetDirectoryName(exe);
 
             // Get data from args
             int port = -1, bauds = -1;
@@ -61,7 +67,7 @@ namespace AvrDudeReset
                     }
                 }
 
-            _p = new Process { StartInfo = new ProcessStartInfo("avrdude2.exe", "\"" + String.Join("\" \"", args) + "\"") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow=true } , EnableRaisingEvents = true };
+            _p = new Process { StartInfo = new ProcessStartInfo(AvrDudeRealExe, "\"" + String.Join("\" \"", args) + "\"") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow=true } , EnableRaisingEvents = true };
             _p.OutputDataReceived += p_OutputDataReceived;
             _p.ErrorDataReceived += p_ErrorDataReceived;
 
@@ -100,12 +106,17 @@ namespace AvrDudeReset
 
         static void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Console.Error.Write(e.Data);
+            Console.Error.Write(ReplaceWrappedExeName(e.Data));
         }
 
         static void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Console.Write(e.Data);
+            Console.Write(ReplaceWrappedExeName(e.Data));
+        }
+
+        private static string ReplaceWrappedExeName(string text)
+        {
+            return text != null ? text.Replace(AvrDudeRealExe, _currentExe) : null;
         }
     }
 }
