@@ -66,6 +66,8 @@ namespace AvrDudeReset
             _p.ErrorDataReceived += p_ErrorDataReceived;
 
             _p.Start();
+            _p.BeginErrorReadLine();
+            _p.BeginOutputReadLine();
             _p.WaitForExit();
             Environment.Exit(_p.ExitCode);
         }
