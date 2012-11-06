@@ -479,6 +479,7 @@ public class Editor extends JFrame implements RunnerListener {
     setJMenuBar(menubar);
   }
 
+
   protected JMenu buildFileMenu() {
     JMenuItem item;
     fileMenu = new JMenu(_("File"));
@@ -1174,7 +1175,10 @@ public class Editor extends JFrame implements RunnerListener {
     item = newJMenuItemShift(_("Find in Reference"), 'F');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          handleFindReference();
+//          if (textarea.isSelectionActive()) {
+//            handleFindReference();
+//          }
+        	handleFindReference();
         }
       });
     menu.add(item);
@@ -1390,6 +1394,7 @@ public class Editor extends JFrame implements RunnerListener {
     menuItem.setAccelerator(KeyStroke.getKeyStroke(what, modifiers));
     return menuItem;
   }
+
 
   /**
    * Same as newJMenuItem(), but adds the ALT (on Linux and Windows)
