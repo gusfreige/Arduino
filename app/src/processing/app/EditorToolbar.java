@@ -35,15 +35,17 @@ import javax.swing.event.*;
  * run/stop/etc buttons for the ide
  */
 public class EditorToolbar extends JComponent implements MouseInputListener, KeyListener {
-
+  /** Open the serial mode automatically always, reverts default action. */
+  static final boolean autoOpenSerialMonitor = Preferences.getBoolean("serial.open_monitor");
+  
   /** Rollover titles for each button. */
   static final String title[] = {
-    _("Verify"), _("Upload"), _("New"), _("Open"), _("Save"), _("Serial Monitor")
+    _("Verify"), autoOpenSerialMonitor ?  _("Upload and then Open Serial Monitor"):_("Upload"), _("New"), _("Open"), _("Save"), _("Serial Monitor")
   };
   
   /** Titles for each button when the control key is pressed. */ 
   static final String titleControl[] = {
-    _("Verify"), _("Upload and then Open Serial Monitor"), _("New"), _("Open"), _("Save"), _("Serial Monitor")
+    _("Verify"), !autoOpenSerialMonitor ?  _("Upload and then Open Serial Monitor"):_("Upload"), _("New"), _("Open"), _("Save"), _("Serial Monitor")
   };
 
   /** Titles for each button when the shift key is pressed. */ 
@@ -357,7 +359,8 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
       break;
 
     case EXPORT:
-      editor.handleExport(e.isShiftDown(),e.isControlDown());
+      boolean t = e.isControlDown();
+      editor.handleExport(e.isShiftDown(),autoOpenSerialMonitor ? !t : t); // Control is down if autoOpenSerialMonitor is true in preferences
       break;
 
     case SERIAL:
