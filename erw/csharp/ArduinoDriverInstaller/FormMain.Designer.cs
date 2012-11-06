@@ -39,6 +39,7 @@
             this.labelOK = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonInstall = new System.Windows.Forms.Button();
+            this.checkBoxInstallCert = new System.Windows.Forms.CheckBox();
             this.groupBoxHint.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelForm.SuspendLayout();
@@ -57,7 +58,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxHint.Controls.Add(this.pictureBox1);
             this.groupBoxHint.Controls.Add(this.label3);
-            this.groupBoxHint.Location = new System.Drawing.Point(-27, 252);
+            this.groupBoxHint.Location = new System.Drawing.Point(-27, 279);
             this.groupBoxHint.Name = "groupBoxHint";
             this.groupBoxHint.Size = new System.Drawing.Size(501, 75);
             this.groupBoxHint.TabIndex = 11;
@@ -91,6 +92,7 @@
             this.panelForm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelForm.Controls.Add(this.checkBoxInstallCert);
             this.panelForm.Controls.Add(this.label1);
             this.panelForm.Controls.Add(this.checkedListBoxDrivers);
             this.panelForm.Controls.Add(this.labelOK);
@@ -98,7 +100,7 @@
             this.panelForm.Controls.Add(this.buttonInstall);
             this.panelForm.Location = new System.Drawing.Point(4, 4);
             this.panelForm.Name = "panelForm";
-            this.panelForm.Size = new System.Drawing.Size(451, 249);
+            this.panelForm.Size = new System.Drawing.Size(451, 276);
             this.panelForm.TabIndex = 12;
             // 
             // label1
@@ -119,7 +121,7 @@
             this.checkedListBoxDrivers.IntegralHeight = false;
             this.checkedListBoxDrivers.Location = new System.Drawing.Point(8, 23);
             this.checkedListBoxDrivers.Name = "checkedListBoxDrivers";
-            this.checkedListBoxDrivers.Size = new System.Drawing.Size(435, 189);
+            this.checkedListBoxDrivers.Size = new System.Drawing.Size(435, 193);
             this.checkedListBoxDrivers.TabIndex = 6;
             // 
             // labelOK
@@ -127,7 +129,7 @@
             this.labelOK.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelOK.AutoEllipsis = true;
-            this.labelOK.Location = new System.Drawing.Point(8, 223);
+            this.labelOK.Location = new System.Drawing.Point(8, 250);
             this.labelOK.Name = "labelOK";
             this.labelOK.Size = new System.Drawing.Size(273, 13);
             this.labelOK.TabIndex = 8;
@@ -137,7 +139,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(368, 218);
+            this.buttonCancel.Location = new System.Drawing.Point(368, 245);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -149,7 +151,7 @@
             // 
             this.buttonInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInstall.Enabled = false;
-            this.buttonInstall.Location = new System.Drawing.Point(287, 218);
+            this.buttonInstall.Location = new System.Drawing.Point(287, 245);
             this.buttonInstall.Name = "buttonInstall";
             this.buttonInstall.Size = new System.Drawing.Size(75, 23);
             this.buttonInstall.TabIndex = 7;
@@ -157,11 +159,23 @@
             this.buttonInstall.UseVisualStyleBackColor = true;
             this.buttonInstall.Click += new System.EventHandler(this.buttonInstall_Click);
             // 
+            // checkBoxInstallCert
+            // 
+            this.checkBoxInstallCert.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxInstallCert.Location = new System.Drawing.Point(8, 222);
+            this.checkBoxInstallCert.Name = "checkBoxInstallCert";
+            this.checkBoxInstallCert.Size = new System.Drawing.Size(435, 17);
+            this.checkBoxInstallCert.TabIndex = 9;
+            this.checkBoxInstallCert.Text = "Install a test certificate to allow the unsigned drivers (Required for Windows 8 " +
+    "x64)";
+            this.checkBoxInstallCert.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(459, 310);
+            this.ClientSize = new System.Drawing.Size(459, 337);
             this.Controls.Add(this.panelForm);
             this.Controls.Add(this.groupBoxHint);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -193,6 +207,7 @@
         private System.Windows.Forms.Label labelOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonInstall;
+        private System.Windows.Forms.CheckBox checkBoxInstallCert;
     }
 }
 

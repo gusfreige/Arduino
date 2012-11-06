@@ -368,7 +368,6 @@ public class Compiler implements MessageConsumer {
   /**
    * Either succeeds or throws a RunnerException fit for public consumption.
    */
-   
   private void execAsynchronously(List commandList) throws RunnerException {
   	execAsynchronouslyWorkingDirectory(commandList,null);
   } 
