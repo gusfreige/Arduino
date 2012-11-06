@@ -10,6 +10,7 @@ namespace AvrDudeReset
     {
         static Process _p;
         private const string AvrDudeRealExe = "avrdude2.exe";
+        private const string AvrIgnoreIf = "-cavr109";
         private static string _currentExe = "";
 
         static void Main(string[] args)
@@ -22,20 +23,26 @@ namespace AvrDudeReset
 
             // Get data from args
             int port = -1, bauds = -1;
+            var shouldCheckPort = true;
             foreach (var arg in args)
             {
                 if (arg.StartsWith(portPrefix, StringComparison.InvariantCultureIgnoreCase))
                     port = int.Parse(arg.Remove(0, portPrefix.Length));
-                else
-                    if (arg.StartsWith(baudsPrefix, StringComparison.InvariantCultureIgnoreCase))
-                        bauds = int.Parse(arg.Remove(0, baudsPrefix.Length));
+                else if (arg.StartsWith(baudsPrefix, StringComparison.InvariantCultureIgnoreCase))
+                    bauds = int.Parse(arg.Remove(0, baudsPrefix.Length));
 
-                if (port != -1 && bauds != -1)
+                if (arg.Contains(AvrIgnoreIf))
+                {
+                    shouldCheckPort = false;
                     break;
+                }
+
+                /*if (port != -1 && bauds != -1)
+                    break;*/
             }
 
             // Check if port is available
-            if (port != -1 && bauds != -1)
+            if (port != -1 && bauds != -1 && shouldCheckPort)
                 if (!PortIsOk(port, bauds))
                 {
 
