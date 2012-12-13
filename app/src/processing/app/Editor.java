@@ -155,7 +155,7 @@ public class Editor extends JFrame implements RunnerListener {
 
     Base.setIcon(this);
 
-	Toolkit.getDefaultToolkit().addAWTEventListener(new TargetedMouseHandler( this ), AWTEvent.FOCUS_EVENT_MASK);
+	//Toolkit.getDefaultToolkit().addAWTEventListener(new TargetedMouseHandler( this ), AWTEvent.FOCUS_EVENT_MASK);
 
     // Install default actions for Run, Present, etc.
     resetHandlers();
