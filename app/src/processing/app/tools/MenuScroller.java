@@ -48,10 +48,26 @@ public class MenuScroller {
   private int firstIndex = 0;
   private int keepVisibleIndex = -1;
 
-  private static int getMaximumItems()
-  {
-  	return (int)((java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight())/22)-1;//22.0
-  }
+  /**
+   * Returns the maximum items that fit in the current screen
+   *  
+   * @author Paul Stoffregen
+   * @param menu the menu
+   * @return Number of items
+   */ 
+   private static int getMaximumItems(JPopupMenu menu) {
+	 JMenuItem test = new JMenuItem("test");
+	 ButtonUI ui = test.getUI();
+	 Dimension d = ui.getPreferredSize(test);
+	 double item_height = d.getHeight();
+	 JMenuItem up = new JMenuItem(MenuIcon.UP);
+	 ui = up.getUI();
+	 d = ui.getPreferredSize(up);
+	 double icon_height = d.getHeight();
+	 double menu_border_height = 8.0; // kludge - how to detect this?
+	 double screen_height = java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+	 return (int)((screen_height - icon_height * 2 - menu_border_height) / item_height);
+   }
 
   /**
    * Registers a menu to be scrolled with the default number of items to
