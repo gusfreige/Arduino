@@ -34,8 +34,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panelForm = new System.Windows.Forms.Panel();
-            this.linkLabelDriver = new System.Windows.Forms.LinkLabel();
-            this.checkBoxInstallCert = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkedListBoxDrivers = new System.Windows.Forms.CheckedListBox();
             this.labelOK = new System.Windows.Forms.Label();
@@ -93,8 +91,6 @@
             this.panelForm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelForm.Controls.Add(this.linkLabelDriver);
-            this.panelForm.Controls.Add(this.checkBoxInstallCert);
             this.panelForm.Controls.Add(this.label1);
             this.panelForm.Controls.Add(this.checkedListBoxDrivers);
             this.panelForm.Controls.Add(this.labelOK);
@@ -104,32 +100,6 @@
             this.panelForm.Name = "panelForm";
             this.panelForm.Size = new System.Drawing.Size(451, 287);
             this.panelForm.TabIndex = 12;
-            // 
-            // linkLabelDriver
-            // 
-            this.linkLabelDriver.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabelDriver.AutoEllipsis = true;
-            this.linkLabelDriver.Location = new System.Drawing.Point(8, 231);
-            this.linkLabelDriver.Name = "linkLabelDriver";
-            this.linkLabelDriver.Size = new System.Drawing.Size(435, 19);
-            this.linkLabelDriver.TabIndex = 10;
-            this.linkLabelDriver.TabStop = true;
-            this.linkLabelDriver.Text = "Manage the \'Driver Signature Enforcement\' (Required  for Windows 8 x64)";
-            this.linkLabelDriver.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.linkLabelDriver.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDriver_LinkClicked);
-            // 
-            // checkBoxInstallCert
-            // 
-            this.checkBoxInstallCert.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBoxInstallCert.Location = new System.Drawing.Point(8, 233);
-            this.checkBoxInstallCert.Name = "checkBoxInstallCert";
-            this.checkBoxInstallCert.Size = new System.Drawing.Size(435, 17);
-            this.checkBoxInstallCert.TabIndex = 9;
-            this.checkBoxInstallCert.Text = "Install a test certificate to allow the unsigned drivers (Required for Windows 8 " +
-    "x64)";
-            this.checkBoxInstallCert.UseVisualStyleBackColor = true;
-            this.checkBoxInstallCert.Visible = false;
             // 
             // label1
             // 
@@ -149,7 +119,7 @@
             this.checkedListBoxDrivers.IntegralHeight = false;
             this.checkedListBoxDrivers.Location = new System.Drawing.Point(8, 23);
             this.checkedListBoxDrivers.Name = "checkedListBoxDrivers";
-            this.checkedListBoxDrivers.Size = new System.Drawing.Size(435, 204);
+            this.checkedListBoxDrivers.Size = new System.Drawing.Size(435, 227);
             this.checkedListBoxDrivers.TabIndex = 6;
             // 
             // labelOK
@@ -223,8 +193,6 @@
         private System.Windows.Forms.Label labelOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonInstall;
-        private System.Windows.Forms.CheckBox checkBoxInstallCert;
-        private System.Windows.Forms.LinkLabel linkLabelDriver;
     }
 }
 

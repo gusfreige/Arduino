@@ -35,10 +35,12 @@ namespace ArduinoDriverInstaller
             }
 
             // Detect Windows 8
-            /*var os = Environment.OSVersion.Version;
+            var os = Environment.OSVersion.Version;
             if (os.Major >= 6 && os.Minor >= 2)
-                checkBoxInstallCert.Checked = Environment.Is64BitOperatingSystem;*/
-
+                if (Environment.Is64BitOperatingSystem)
+                    if (Settings.Default.ShowWin8Hint > 0)
+                        if ((new FormWin8Hint()).ShowDialog() == System.Windows.Forms.DialogResult.Abort)
+                            this.Visible = false;
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -71,7 +73,7 @@ namespace ArduinoDriverInstaller
         private void buttonInstall_Click(object sender, EventArgs e)
         {
             var installCertificate = false;
-            if (checkBoxInstallCert.Checked)
+            /*if (checkBoxInstallCert.Checked)
             {
                 if (MessageBox.Show("A test certificate will be installed to allow the unsigned drivers in your machine. This can be a security risk, "+
                     "but if you need to use the drivers the alternative is to disable the 'Driver Signature Enforcement' and then install the unsigned drivers." + 
@@ -83,7 +85,7 @@ namespace ArduinoDriverInstaller
                 }
                 else
                     return;
-            }
+            }*/
 
             if (MessageBox.Show("Depending on your operative system and settings you may view some warnings (mainly because some of the drivers aren't signed)." + 
                 Environment.NewLine + Environment.NewLine + "Are you sure you want to install the checked drivers?", "Install drivers", MessageBoxButtons.YesNo, 
@@ -183,7 +185,7 @@ namespace ArduinoDriverInstaller
         {
             labelOK.Text = "Installation complete.";
             MessageBox.Show(checkedListBoxDrivers.CheckedIndices.Count > 0 ? ("Some drivers failed to install. Remember to allow the warnings, check the driver list for the checked ones. " +
-            "Unchecked ones were installed properly." + (checkBoxInstallCert.Checked ? "" : " Also you may try to disable the 'Driver Signature Enforcement' for your system.")) : "All the checked drivers should be properly installed now." + Environment.NewLine + Environment.NewLine + 
+            "Unchecked ones were installed properly." /*+ (checkBoxInstallCert.Checked ? "" : " Also you may try to disable the 'Driver Signature Enforcement' for your system.")*/) : "All the checked drivers should be properly installed now." + Environment.NewLine + Environment.NewLine + 
                 "You can close this window now. Enjoy!", "Installation complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             buttonCancel.Text = "Close";
