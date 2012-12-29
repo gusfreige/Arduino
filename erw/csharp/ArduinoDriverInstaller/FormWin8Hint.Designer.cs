@@ -42,22 +42,22 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(572, 610);
+            this.buttonCancel.Location = new System.Drawing.Point(573, 610);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(138, 23);
             this.buttonCancel.TabIndex = 0;
-            this.buttonCancel.Text = "&Remind me later";
+            this.buttonCancel.Text = "&Continue anyways";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonHide
             // 
             this.buttonHide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonHide.Location = new System.Drawing.Point(284, 610);
+            this.buttonHide.Location = new System.Drawing.Point(285, 610);
             this.buttonHide.Name = "buttonHide";
             this.buttonHide.Size = new System.Drawing.Size(138, 23);
             this.buttonHide.TabIndex = 2;
-            this.buttonHide.Text = "&Don\'t show this hint again";
+            this.buttonHide.Text = "&Don\'t show me this again";
             this.buttonHide.UseVisualStyleBackColor = true;
             this.buttonHide.Click += new System.EventHandler(this.buttonHide_Click);
             // 
@@ -76,11 +76,11 @@
             // 
             this.buttonQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonQuit.DialogResult = System.Windows.Forms.DialogResult.Abort;
-            this.buttonQuit.Location = new System.Drawing.Point(428, 610);
+            this.buttonQuit.Location = new System.Drawing.Point(429, 610);
             this.buttonQuit.Name = "buttonQuit";
             this.buttonQuit.Size = new System.Drawing.Size(138, 23);
             this.buttonQuit.TabIndex = 3;
-            this.buttonQuit.Text = "&Quit this driver installer";
+            this.buttonQuit.Text = "&Skip the drivers for now";
             this.buttonQuit.UseVisualStyleBackColor = true;
             this.buttonQuit.Click += new System.EventHandler(this.buttonQuit_Click);
             // 
@@ -102,10 +102,10 @@
             this.linkLabelPrint.AutoSize = true;
             this.linkLabelPrint.Location = new System.Drawing.Point(13, 615);
             this.linkLabelPrint.Name = "linkLabelPrint";
-            this.linkLabelPrint.Size = new System.Drawing.Size(84, 13);
+            this.linkLabelPrint.Size = new System.Drawing.Size(113, 13);
             this.linkLabelPrint.TabIndex = 5;
             this.linkLabelPrint.TabStop = true;
-            this.linkLabelPrint.Text = "Print instructions";
+            this.linkLabelPrint.Text = "Print these instructions";
             this.linkLabelPrint.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPrint_LinkClicked);
             // 
             // FormWin8Hint
@@ -124,7 +124,7 @@
             this.MinimumSize = new System.Drawing.Size(524, 209);
             this.Name = "FormWin8Hint";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Hey, it seems you have Windows 8 (64 bits)!";
+            this.Text = "Install Board Drivers - Additional steps for Windows 8 (x64)";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FormWin8Hint_Load);
             this.panel1.ResumeLayout(false);
