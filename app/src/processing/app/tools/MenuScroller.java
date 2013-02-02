@@ -20,6 +20,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.ButtonUI;
 
 /**
  * A class that provides scrolling capabilities to a long menu dropdown or
@@ -55,7 +56,7 @@ public class MenuScroller {
    * @param menu the menu
    * @return Number of items
    */ 
-   private static int getMaximumItems(JPopupMenu menu) {
+   private static int getMaximumItems() {
 	 JMenuItem test = new JMenuItem("test");
 	 ButtonUI ui = test.getUI();
 	 Dimension d = ui.getPreferredSize(test);
