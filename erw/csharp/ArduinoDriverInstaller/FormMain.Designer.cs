@@ -121,6 +121,7 @@
             this.checkedListBoxDrivers.Name = "checkedListBoxDrivers";
             this.checkedListBoxDrivers.Size = new System.Drawing.Size(435, 227);
             this.checkedListBoxDrivers.TabIndex = 6;
+            this.checkedListBoxDrivers.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxDrivers_ItemCheck);
             // 
             // labelOK
             // 

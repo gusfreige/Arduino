@@ -141,8 +141,8 @@ namespace ArduinoDriverInstaller
             { CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false } };
             p.Start();
 
-            p.BeginErrorReadLine();
-            p.BeginOutputReadLine();
+            /*p.BeginErrorReadLine();
+            p.BeginOutputReadLine();*/
             p.WaitForExit();
             return p;
         }
@@ -204,61 +204,6 @@ namespace ArduinoDriverInstaller
 
                 foreach (var i in s.Installed)
                     this.checkedListBoxDrivers.SetItemChecked(i, false);
-            }
-        }
-
-        private void linkLabelDriver_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                var bcdedit = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86), "bcdedit.exe");
-                if(!File.Exists(bcdedit))
-                    bcdedit = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "bcdedit.exe");
-                if(!File.Exists(bcdedit))
-                    bcdedit = Environment.ExpandEnvironmentVariables("%windir%\\Sysnative\\bcdedit.exe");
-
-                var p = RunExe(bcdedit,"");
-
-                //p.BeginOutputReadLine();
-                p.WaitForExit(30000);
-                //p.Close();
-
-                //MessageBox.Show(p.StandardError.ReadToEnd());
-                foreach (var entry in p.StandardOutput.ReadToEnd().Split(new[] { "---------------------------------" }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if(entry.Contains("{current}"))
-                    {
-                        // Found current entry
-                        if (!entry.Contains("DISABLE_INTEGRITY_CHECKS"))
-                        {
-                            if (MessageBox.Show("Driver Signature Enforcement is enabled in this machine. You may disable this feature to install unsigned drivers." + Environment.NewLine + Environment.NewLine +
-                                "Do you want to disable Driver Signature Enforcement policy now?", "Driver Signature Enforcement is enabled", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                RunExe(bcdedit, "-set loadoptions DDISABLE_INTEGRITY_CHECKS").WaitForExit(30000);
-                                RunExe(bcdedit, "-set TESTSIGNING ON").WaitForExit(30000);
-
-                                if (MessageBox.Show("Driver Signature Enforcement is enabled now." + Environment.NewLine + Environment.NewLine +
-                                    "To install the unsigned drivers you need to reboot this machine and then open the 'Configure Board Drivers' application from Start/Arduino subfolder." + Environment.NewLine + Environment.NewLine + "Do you want to reboot your PC now?", "Reboot PC", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
-                                    RunExe("shutdown.exe", "-r -t 0");
-                            }
-                        }
-                        else
-                        {
-                            if (MessageBox.Show("Driver Signature Enforcement is already disabled in this machine. You should be able to install any driver now." + Environment.NewLine + Environment.NewLine +
-                                "Do you want to restore Driver Signature Enforcement policy?", "Driver Signature Enforcement is already disabled", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                RunExe(bcdedit, "/deletevalue loadoptions").WaitForExit(30000);
-                                RunExe(bcdedit, "-set TESTSIGNING OFF").WaitForExit(30000);
-
-                                MessageBox.Show("You will have to reboot your machine to fully restore these settings.", "Reboot PC", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("There is no Boot Configuration Data Editor (BCD) in this machine.", "No BCDEdit");
             }
         }
 
