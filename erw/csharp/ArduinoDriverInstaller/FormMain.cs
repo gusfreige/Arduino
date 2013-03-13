@@ -29,12 +29,6 @@ namespace ArduinoDriverInstaller
                 var f = Path.GetFullPath(d);
                 var filename = Path.GetFileNameWithoutExtension(d);
 
-                if(!showHint)
-                    if (Settings.Default.HideWin8Hint.Cast<string>().Any(t => filename.ToLower().Contains(t.ToLower())))
-                    {
-                        showHint = true;
-                    }
-
                 checkedListBoxDrivers.Items.Add(AddInformation(filename), true);
                 buttonInstall.Enabled = true;
                 _drivers.Add(f);
@@ -51,17 +45,6 @@ namespace ArduinoDriverInstaller
                 groupBoxHint.Visible = false;
                 this.Height -= 50;
                 panelForm.Height += 50;
-            }
-
-            if (showHint)
-            {
-                // Detect Windows 8
-                var os = Environment.OSVersion.Version;
-                if (os.Major >= 6 && os.Minor >= 2)
-                    if (Environment.Is64BitOperatingSystem)
-                        if (Settings.Default.ShowWin8Hint > 0)
-                            if ((new FormWin8Hint()).ShowDialog() == System.Windows.Forms.DialogResult.Abort)
-                                this.Visible = false;
             }
         }
 
@@ -86,46 +69,12 @@ namespace ArduinoDriverInstaller
 
         private void buttonInstall_Click(object sender, EventArgs e)
         {
-            var installCertificate = false;
-            /*if (checkBoxInstallCert.Checked)
-            {
-                if (MessageBox.Show("A test certificate will be installed to allow the unsigned drivers in your machine. This can be a security risk, "+
-                    "but if you need to use the drivers the alternative is to disable the 'Driver Signature Enforcement' and then install the unsigned drivers." + 
-                    Environment.NewLine + Environment.NewLine + "Are you sure you want to continue and install the certificate?", "Install drivers", MessageBoxButtons.YesNo, 
-                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
-                {
-                    // Install certificate
-                    installCertificate = true;
-                }
-                else
-                    return;
-            }*/
 
-            if (MessageBox.Show("Depending on your operative system and settings you may view some warnings (mainly because some of the drivers aren't signed)." + 
+            if (MessageBox.Show("Depending on your operative system and settings you may view (and allow) some actions/warnings." + 
                 Environment.NewLine + Environment.NewLine + "Are you sure you want to install the checked drivers?", "Install drivers", MessageBoxButtons.YesNo, 
                 MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
             {
                 UpdateGUI(false);
-
-                if (installCertificate)
-                {
-                    labelOK.Text = "Installing certificate...";
-                    labelOK.Visible = true;
-                    Application.DoEvents();
-
-                    try
-                    {
-                        foreach (var s in new[] { "ROOT", "TRUSTEDPUBLISHER" })
-                        {
-                            Process.Start(new ProcessStartInfo("certinstall.exe",
-                                                               "-add arduino.cer -s -r localMachine " + s)
-                                              {CreateNoWindow = true}).WaitForExit(30000);
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
 
                 labelOK.Text = "Starting";
                 labelOK.Visible = true;
@@ -154,9 +103,6 @@ namespace ArduinoDriverInstaller
             var p = new Process() { StartInfo = new ProcessStartInfo("devcon" + (Environment.Is64BitOperatingSystem ? "64" : "86") + ".exe", args) 
             { CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false } };
             p.Start();
-
-            /*p.BeginErrorReadLine();
-            p.BeginOutputReadLine();*/
             p.WaitForExit();
             return p;
         }
