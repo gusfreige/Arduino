@@ -8,12 +8,12 @@
 AppID={{8220E838-DFF3-45AA-B338-EC34684489EA}
 AppName=Arduino Enhanced Release for Windows (without Java)
 ;AppName=Arduino Enhanced Release for Windows
-AppVersion=v1.0.3
+AppVersion=v1.0.4
 AppPublisher=Erwin Ried
 AppPublisherURL=http://servicios.ried.cl/
 AppSupportURL=http://servicios.ried.cl/
 AppUpdatesURL=http://servicios.ried.cl/
-DefaultDirName={pf}\Arduino\Arduino ERW 1.0.3
+DefaultDirName={pf}\Arduino\Arduino ERW 1.0.4
 DefaultGroupName=Arduino
 OutputDir=setup
 ;OutputBaseFilename=setup
@@ -37,13 +37,13 @@ Name: "pdefiletype"; Description: "Associate .pde files"; GroupDescription: "Fil
 Name: "installdrivers"; Description: "Show me options to Configure Board Drivers"; GroupDescription: "Setup Board Drivers:"
 
 [Files]
-Source: "files\arduino-1.0.3\*"; DestDir: "{app}"; Flags: ignoreversion createallsubdirs recursesubdirs; Excludes: "java\*"
-;Source: "files\arduino-1.0.3\*"; DestDir: "{app}"; Flags: ignoreversion createallsubdirs recursesubdirs;
+Source: "files\arduino-1.0.4\*"; DestDir: "{app}"; Flags: ignoreversion createallsubdirs recursesubdirs; Excludes: "java\*"
+;Source: "files\arduino-1.0.4\*"; DestDir: "{app}"; Flags: ignoreversion createallsubdirs recursesubdirs;
 
 [Icons]
-Name: "{group}\Arduino ERW 1.0.3"; Filename: {app}\arduino.exe; 
+Name: "{group}\Arduino ERW 1.0.4"; Filename: {app}\arduino.exe; 
 Name: "{group}\Configure Board Drivers"; Filename: {app}\drivers\DriverHelper.exe; Flags: excludefromshowinnewinstall; 
-Name: "{userdesktop}\Arduino ERW 1.0.3"; Filename: {app}\arduino.exe; Tasks: desktopicon; 
+Name: "{userdesktop}\Arduino ERW 1.0.4"; Filename: {app}\arduino.exe; Tasks: desktopicon; 
 
 ;[Registry]
 ;Root: HKCR; SubKey: xapfile\shell\open\; ValueType: string; ValueName: command; ValueData: "{app}\wp7-deploy.exe"; Flags: UninsDeleteKey; Tasks: xapfiletype;
@@ -112,8 +112,8 @@ end;
 
 [Run]
 Filename: "{app}\drivers\DriverHelper.exe"; Tasks: installdrivers
-Filename: "{app}\erw\SetPath.exe"; Parameters: "-a ""{app}\hardware\tools\avr\bin"" -r hardware\tools\avr\bin"; Flags: RunMinimized
-Filename: "{app}\erw\first_run.vbs"; Flags: postinstall shellexec; Description: "Open Arduino Enhanced Release for Windows"
+;Filename: "{app}\erw\SetPath.exe"; Parameters: "-a ""{app}\hardware\tools\avr\bin"" -r hardware\tools\avr\bin"; Flags: RunMinimized
+Filename: "{app}\Arduino.exe"; Flags: postinstall; Description: "Open Arduino Enhanced Release for Windows"
 
 [UninstallRun]
-Filename: {app}\erw\SetPath.exe; Parameters: "-r hardware\tools\avr\bin"; Flags: RunHidden; 
+;Filename: {app}\erw\SetPath.exe; Parameters: "-r hardware\tools\avr\bin"; Flags: RunHidden; 
