@@ -29,6 +29,7 @@ namespace ArduinoDriverInstaller.Properties {
 <ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
   <string>ftdibus|FTDI Serial Converter (Legacy boards like decimilla, duemillanove and others)</string>
   <string>ftdiport|FTDI Serial Port (Legacy boards like decimilla, duemillanove and others)</string>
+  <string>430cdc|LaunchPad CDC drivers</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection INFDescriptions {
             get {
@@ -60,6 +61,20 @@ namespace ArduinoDriverInstaller.Properties {
             }
             set {
                 this["ShowWin8Hint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>Arduino</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection HideWin8Hint {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["HideWin8Hint"]));
+            }
+            set {
+                this["HideWin8Hint"] = value;
             }
         }
     }

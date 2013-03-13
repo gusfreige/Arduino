@@ -23,15 +23,16 @@
 
 package processing.app;
 
+import processing.app.syntax.SyntaxStyle;
+import processing.core.PApplet;
+import processing.core.PConstants;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-import javax.swing.*;
-
-import processing.app.syntax.*;
-import processing.core.*;
 import static processing.app.I18n._;
 
 
@@ -69,15 +70,6 @@ public class Preferences {
   // what to call the feller
 
   static final String PREFS_FILE = "idesettings_v1.0.2.txt";
-
-
-  // prompt text stuff
-
-  static final String PROMPT_YES     = _("Yes");
-  static final String PROMPT_NO      = _("No");
-  static final String PROMPT_CANCEL  = _("Cancel");
-  static final String PROMPT_OK      = _("OK");
-  static final String PROMPT_BROWSE  = _("Browse");
 
   String[] fonts = GetAllSystemFonts();
 
@@ -232,7 +224,7 @@ public class Preferences {
     }
 
     // check for platform-specific properties in the defaults
-    String platformExt = "." + PConstants.platformNames[PApplet.platform];
+    String platformExt = "." + Base.platform.getName();
     int platformExtLength = platformExt.length();
     Enumeration e = table.keys();
     while (e.hasMoreElements()) {
@@ -247,9 +239,6 @@ public class Preferences {
 
     // clone the hash table
     defaults = (Hashtable) table.clone();
-
-    // other things that have to be set explicitly for the defaults
-    setColor("run.window.bgcolor", SystemColor.control);
 
     // Load a prefs file if specified on the command line
     if (commandLinePrefs != null) {
@@ -287,7 +276,13 @@ public class Preferences {
 			 ), ex);
         }
       }
-    }    
+    }
+
+    // load the I18n module for internationalization
+    I18n.init(Preferences.get("editor.languages.current"));
+
+    // other things that have to be set explicitly for the defaults
+    setColor("run.window.bgcolor", SystemColor.control);
   }
 
 
@@ -326,7 +321,7 @@ public class Preferences {
     pain.add(sketchbookLocationField);
     d = sketchbookLocationField.getPreferredSize();
 
-    button = new JButton(PROMPT_BROWSE);
+    button = new JButton(I18n.PROMPT_BROWSE);
     button.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           File dflt = new File(sketchbookLocationField.getText());
@@ -517,7 +512,7 @@ public class Preferences {
 
     // [  OK  ] [ Cancel ]  maybe these should be next to the message?
 
-    button = new JButton(PROMPT_OK);
+    button = new JButton(I18n.PROMPT_OK);
     button.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           applyFrame();
@@ -532,7 +527,7 @@ public class Preferences {
     button.setBounds(h, top, BUTTON_WIDTH, BUTTON_HEIGHT);
     h += BUTTON_WIDTH + GUI_SMALL;
 
-    button = new JButton(PROMPT_CANCEL);
+    button = new JButton(I18n.PROMPT_CANCEL);
     button.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           disposeFrame();
@@ -714,8 +709,8 @@ public class Preferences {
     load(input, table);
   }
   
-  static public void load(InputStream input, Map table) throws IOException {  
-    String[] lines = PApplet.loadStrings(input);  // Reads as UTF-8
+  static public void load(InputStream input, Map table) throws IOException {
+    String[] lines = loadStrings(input);  // Reads as UTF-8
     for (String line : lines) {
       if ((line.length() == 0) ||
           (line.charAt(0) == '#')) continue;
@@ -729,6 +724,41 @@ public class Preferences {
       }
     }
   }
+
+  static public String[] loadStrings(InputStream input) {
+    try {
+      BufferedReader reader =
+              new BufferedReader(new InputStreamReader(input, "UTF-8"));
+
+      String lines[] = new String[100];
+      int lineCount = 0;
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        if (lineCount == lines.length) {
+          String temp[] = new String[lineCount << 1];
+          System.arraycopy(lines, 0, temp, 0, lineCount);
+          lines = temp;
+        }
+        lines[lineCount++] = line;
+      }
+      reader.close();
+
+      if (lineCount == lines.length) {
+        return lines;
+      }
+
+      // resize array to appropriate amount for these lines
+      String output[] = new String[lineCount];
+      System.arraycopy(lines, 0, output, 0, lineCount);
+      return output;
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      //throw new RuntimeException("Error inside loadStrings()");
+    }
+    return null;
+  }
+
 
 
   // .................................................................
@@ -744,11 +774,10 @@ public class Preferences {
     // Fix for 0163 to properly use Unicode when writing preferences.txt
     PrintWriter writer = PApplet.createWriter(preferencesFile);
 
-    Enumeration e = table.keys(); //properties.propertyNames();
-    while (e.hasMoreElements()) {
-      String key = (String) e.nextElement();
+    String[] keys = (String[])table.keySet().toArray(new String[0]);
+    Arrays.sort(keys);
+    for (String key: keys)
       writer.println(key + "=" + ((String) table.get(key)));
-    }
 
     writer.flush();
     writer.close();

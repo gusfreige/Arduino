@@ -327,7 +327,7 @@ public class EditorHeader extends JComponent {
     item = new JMenuItem(_("Previous Tab"));
     KeyStroke ctrlAltLeft =
       KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Editor.SHORTCUT_ALT_KEY_MASK);
-    item.setAccelerator(ctrlAltLeft);
+    //item.setAccelerator(ctrlAltLeft);
     // this didn't want to work consistently
     
     item.addActionListener(new ActionListener() {
@@ -341,7 +341,7 @@ public class EditorHeader extends JComponent {
     item = new JMenuItem(_("Next Tab"));
     KeyStroke ctrlAltRight =
       KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Editor.SHORTCUT_ALT_KEY_MASK);
-    item.setAccelerator(ctrlAltRight);
+    //item.setAccelerator(ctrlAltRight);
     
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {

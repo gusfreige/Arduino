@@ -264,10 +264,10 @@ public class Compiler implements MessageConsumer {
     for (File file : sSources) {
       String objectPath = buildPath + File.separator + file.getName() + ".o";
       objectPaths.add(new File(objectPath));
-      execAsynchronouslyWorkingDirectory(getCommandCompilerS(avrBasePath, includePaths,
+      execAsynchronously(getCommandCompilerS(avrBasePath, includePaths,
                                              file.getAbsolutePath(),
                                              objectPath,
-                                             boardPreferences),avrBasePath);
+                                             boardPreferences));
     }
  		
     for (File file : cSources) {
@@ -277,10 +277,10 @@ public class Compiler implements MessageConsumer {
         File dependFile = new File(dependPath);
         objectPaths.add(objectFile);
         if (is_already_compiled(file, objectFile, dependFile, boardPreferences)) continue;
-        execAsynchronouslyWorkingDirectory(getCommandCompilerC(avrBasePath, includePaths,
+        execAsynchronously(getCommandCompilerC(avrBasePath, includePaths,
                                                file.getAbsolutePath(),
                                                objectPath,
-                                               boardPreferences),avrBasePath);
+                                               boardPreferences));
     }
 
     for (File file : cppSources) {
@@ -290,10 +290,10 @@ public class Compiler implements MessageConsumer {
         File dependFile = new File(dependPath);
         objectPaths.add(objectFile);
         if (is_already_compiled(file, objectFile, dependFile, boardPreferences)) continue;
-        execAsynchronouslyWorkingDirectory(getCommandCompilerCPP(avrBasePath, includePaths,
+        execAsynchronously(getCommandCompilerCPP(avrBasePath, includePaths,
                                                  file.getAbsolutePath(),
                                                  objectPath,
-                                                 boardPreferences),avrBasePath);
+                                                 boardPreferences));
     }
     
     return objectPaths;
@@ -369,9 +369,6 @@ public class Compiler implements MessageConsumer {
    * Either succeeds or throws a RunnerException fit for public consumption.
    */
   private void execAsynchronously(List commandList) throws RunnerException {
-  	execAsynchronouslyWorkingDirectory(commandList,null);
-  } 
-  private void execAsynchronouslyWorkingDirectory(List commandList, String directory) throws RunnerException {
     String[] command = new String[commandList.size()];
     commandList.toArray(command);
     int result = 0;
@@ -389,11 +386,7 @@ public class Compiler implements MessageConsumer {
     Process process;
     
     try {
-    	// Working directory
-    	if(directory!=null)
-    		command[0]=command[0].replace(directory,"");
-   	
-      process = Runtime.getRuntime().exec(command,null, directory == null? null:new File(directory));
+      process = Runtime.getRuntime().exec(command);
     } catch (IOException e) {
       RunnerException re = new RunnerException(e.getMessage());
       re.hideStackTrace();
@@ -651,14 +644,18 @@ public class Compiler implements MessageConsumer {
    * not the header files in its sub-folders, as those should be included from
    * within the header files at the top-level).
    */
-  static public String[] headerListFromIncludePath(String path) {
+  static public String[] headerListFromIncludePath(String path) throws IOException {
     FilenameFilter onlyHFiles = new FilenameFilter() {
       public boolean accept(File dir, String name) {
         return name.endsWith(".h");
       }
     };
-    
-    return (new File(path)).list(onlyHFiles);
+
+    String[] list = (new File(path)).list(onlyHFiles);
+    if (list == null) {
+      throw new IOException();
+    }
+    return list;
   }
   
   static public ArrayList<File> findFilesInPath(String path, String extension,

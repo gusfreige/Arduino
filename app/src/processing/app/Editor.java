@@ -44,7 +44,6 @@ import javax.swing.undo.*;
 
 import gnu.io.*;
 
-
 /**
  * Main editor panel for the Processing Development Environment.
  */
@@ -148,14 +147,13 @@ public class Editor extends JFrame implements RunnerListener {
   Runnable stopHandler;
   Runnable exportHandler;
   Runnable exportAppHandler;
-  
+
+
   public Editor(Base ibase, String path, int[] location) {
     super("Arduino");
     this.base = ibase;
 
     Base.setIcon(this);
-
-	//Toolkit.getDefaultToolkit().addAWTEventListener(new TargetedMouseHandler( this ), AWTEvent.FOCUS_EVENT_MASK);
 
     // Install default actions for Run, Present, etc.
     resetHandlers();
@@ -549,7 +547,7 @@ public class Editor extends JFrame implements RunnerListener {
       });
     fileMenu.add(item);
     
-    item = newJMenuItem(_("Upload and then Open Serial Monitor"), 'I');
+    item = newJMenuItem(_("Upload and then Open Serial Monitor"), 'M');
     item.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           handleExport(false,true);

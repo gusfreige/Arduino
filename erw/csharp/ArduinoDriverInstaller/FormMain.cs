@@ -21,6 +21,25 @@ namespace ArduinoDriverInstaller
             Environment.CurrentDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             InitializeComponent();
 
+            // Load drivers
+            bool showHint = false;
+            _drivers = new List<string>();
+            foreach (var d in Directory.GetFiles(".", "*.inf", SearchOption.AllDirectories))
+            {
+                var f = Path.GetFullPath(d);
+                var filename = Path.GetFileNameWithoutExtension(d);
+
+                if(!showHint)
+                    if (Settings.Default.HideWin8Hint.Cast<string>().Any(t => filename.ToLower().Contains(t.ToLower())))
+                    {
+                        showHint = true;
+                    }
+
+                checkedListBoxDrivers.Items.Add(AddInformation(filename), true);
+                buttonInstall.Enabled = true;
+                _drivers.Add(f);
+            }
+
             // Tip
             if (Settings.Default.ShowHint > 0)
             {
@@ -34,25 +53,20 @@ namespace ArduinoDriverInstaller
                 panelForm.Height += 50;
             }
 
-            // Detect Windows 8
-            var os = Environment.OSVersion.Version;
-            if (os.Major >= 6 && os.Minor >= 2)
-                if (Environment.Is64BitOperatingSystem)
-                    if (Settings.Default.ShowWin8Hint > 0)
-                        if ((new FormWin8Hint()).ShowDialog() == System.Windows.Forms.DialogResult.Abort)
-                            this.Visible = false;
+            if (showHint)
+            {
+                // Detect Windows 8
+                var os = Environment.OSVersion.Version;
+                if (os.Major >= 6 && os.Minor >= 2)
+                    if (Environment.Is64BitOperatingSystem)
+                        if (Settings.Default.ShowWin8Hint > 0)
+                            if ((new FormWin8Hint()).ShowDialog() == System.Windows.Forms.DialogResult.Abort)
+                                this.Visible = false;
+            }
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            _drivers = new List<string>();
-            foreach (var d in Directory.GetFiles(".", "*.inf", SearchOption.AllDirectories))
-            {
-                var f = Path.GetFullPath(d);
-                checkedListBoxDrivers.Items.Add(AddInformation(Path.GetFileNameWithoutExtension(d)), true);
-                buttonInstall.Enabled = true;
-                _drivers.Add(f);
-            }
             this.Focus();
         }
 
