@@ -69,7 +69,7 @@ public class Preferences {
 
   // what to call the feller
 
-  static final String PREFS_FILE = "idesettings_v1.0.2.txt";
+  static final String PREFS_FILE = "idesettings_v104.txt";
 
   String[] fonts = GetAllSystemFonts();
 
@@ -198,7 +198,7 @@ public class Preferences {
   // data model
 
   static Hashtable defaults;
-  static Hashtable table = new Hashtable();;
+  static Hashtable table = new Hashtable();
   static File preferencesFile;
  
   // Retrieves the name of all the system fonts
@@ -217,7 +217,7 @@ public class Preferences {
     // start by loading the defaults, in case something
     // important was deleted from the user prefs
     try {
-      load(Base.getLibStream("idesettings_v1.0.2.txt"));
+      load(Base.getLibStream("idesettings_v104.txt"));
     } catch (Exception e) {
       Base.showError(null, _("Could not read default settings.\n" +
                              "You'll need to reinstall Arduino."), e);
