@@ -308,7 +308,7 @@ public class FindReplace extends JFrame implements ActionListener {
   // once found, select it (and go to that line)
 
   private boolean find(boolean wrap,boolean backwards,boolean searchTabs,int originTab) {
-
+System.out.println("Find: " + originTab);
 	boolean wrapNeeded = false;
     String search = findField.getText();
     //System.out.println("finding for " + search + " " + findString);
@@ -422,11 +422,11 @@ public class FindReplace extends JFrame implements ActionListener {
    */
   public void replaceAll() {
     // move to the beginning
-    //editor.setSelection(0, 0);
+    editor.setSelection(0, 0);
 
     boolean foundAtLeastOne = false;
     while ( true ) {
-      if ( find(true,false,searchAllFiles,-1)) {
+      if ( find(false,false,searchAllFiles,-1)) {
         foundAtLeastOne = true;
         replace();
      } else {
