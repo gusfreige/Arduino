@@ -1124,7 +1124,7 @@ public class Base {
                                 final boolean replaceExisting) throws IOException {
     // skip .DS_Store files, etc (this shouldn't actually be necessary)
     if (!folder.isDirectory()) return false;
-
+	
     String[] list = folder.list();
     // If a bad folder or unreadable or whatever, this will come back null
     if (list == null) return false;
@@ -1139,6 +1139,10 @@ public class Base {
           String path = e.getActionCommand();
           if (new File(path).exists()) {
             boolean replace = replaceExisting;
+            
+            if(Preferences.getBoolean("editor.window.reuse"))
+			  replace = true;
+            
             if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
               replace = !replace;
             }

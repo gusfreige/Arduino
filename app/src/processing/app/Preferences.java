@@ -189,6 +189,8 @@ public class Preferences {
   JCheckBox autoAssociateBox;
   JComboBox comboLanguage;
   JComboBox comboFont;
+  JCheckBox openMonitorBox;
+  JCheckBox alwaysReuseWindowBox;
   
   // the calling editor, so updates can be applied
 
@@ -462,6 +464,24 @@ public class Preferences {
       top += d.height + GUI_BETWEEN;
     }
 
+	// [ ] Open the monitor
+	
+	openMonitorBox = new JCheckBox(_("Open the Serial Monitor automatically when uploading as default *"));
+    pain.add(openMonitorBox);
+    d = openMonitorBox.getPreferredSize();
+    openMonitorBox.setBounds(left, top, d.width + 10, d.height);
+    right = Math.max(right, left + d.width);
+    top += d.height + GUI_BETWEEN;   
+    	
+    // [ ] Always reuse window when opening
+    
+    alwaysReuseWindowBox = new JCheckBox(_("Use the same window when opening a Sketch as default"));
+    pain.add(alwaysReuseWindowBox);
+    d = alwaysReuseWindowBox.getPreferredSize();
+    alwaysReuseWindowBox.setBounds(left, top, d.width + 10, d.height);
+    right = Math.max(right, left + d.width);
+    top += d.height + GUI_BETWEEN;   
+
     // More preferences are in the ...
 
     label = new JLabel(_("More preferences can be edited directly in the file"));
@@ -611,6 +631,8 @@ public class Preferences {
     setBoolean("build.verbose", verboseCompilationBox.isSelected());
     setBoolean("upload.verbose", verboseUploadBox.isSelected());
     setBoolean("upload.verify", verifyUploadBox.isSelected());
+    setBoolean("serial.open_monitor", openMonitorBox.isSelected());
+    setBoolean("editor.window.reuse", alwaysReuseWindowBox.isSelected());
     
 //    setBoolean("sketchbook.closing_last_window_quits",
 //               closingLastQuitsBox.isSelected());
@@ -675,6 +697,8 @@ public class Preferences {
     verboseCompilationBox.setSelected(getBoolean("build.verbose"));
     verboseUploadBox.setSelected(getBoolean("upload.verbose"));
     verifyUploadBox.setSelected(getBoolean("upload.verify"));
+    openMonitorBox.setSelected(getBoolean("serial.open_monitor"));
+    alwaysReuseWindowBox.setSelected(getBoolean("editor.window.reuse"));
 
     //closingLastQuitsBox.
     //  setSelected(getBoolean("sketchbook.closing_last_window_quits"));
