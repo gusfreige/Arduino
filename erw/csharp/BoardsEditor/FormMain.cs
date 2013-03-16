@@ -34,20 +34,47 @@ namespace BoardsEditor
             comboBoxBoards.Items.Clear();
 
             foreach (var b in _boards.Boards)
-            {
                 comboBoxBoards.Items.Add(b.Name);
-            }
         }
 
         private void comboBoxBoards_SelectedIndexChanged(object sender, EventArgs e)
         {
+            flowLayoutPanelProperties.Controls.Clear();
+            var boardName = _boards.Boards[comboBoxBoards.SelectedIndex].Token;
+            var tooltip = new ToolTip();
+
             foreach(var p in _boards.Boards[comboBoxBoards.SelectedIndex].Properties)
             {
-                flowLayoutPanelProperties.Controls.Add(new Label() {Text = p.Name, Width = 200});
+                var label = new Control();
 
-                var l = new TextBox() {Text = p.Value, Width = 200};
-                flowLayoutPanelProperties.Controls.Add(l);
+                var text = new TextBox { Text = p.Value, Width = 200, Tag = boardName + "." + p.Name };
+                if(p.Name.ToLower().Equals("name"))
+                    label = new Label {Text = p.Name, Width = 200};
+                else
+                {
+                    label = new LinkLabel { Text = p.Name, Width = 200 };
+                    label.Click += (o, args) => { new ContextMenu(GetMenuItems(_boards.GetPropertiesValues(p.Name), text)).Show((Control) o, ((Control) o).PointToClient(Cursor.Position)); };
+                }
+                
+                tooltip.SetToolTip(label, (String)text.Tag);
+
+                flowLayoutPanelProperties.Controls.Add(label);
+                flowLayoutPanelProperties.Controls.Add(text);
             }
+        }
+
+        private static MenuItem[] GetMenuItems(IEnumerable<string> strings, TextBox text)
+        {
+            var m = new List<MenuItem>();
+
+            foreach (var s in strings)
+            {
+                var item = new MenuItem(s);
+                item.Click += (o, args) => { text.Text = ((MenuItem) o).Text; };
+                m.Add(item);
+            }
+
+            return m.ToArray();
         }
     }
 }

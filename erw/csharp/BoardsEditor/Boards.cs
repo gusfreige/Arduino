@@ -38,6 +38,24 @@ namespace BoardsEditor
 
             return s.Select(def => new Board() {Token = def.Key, Properties = def.Value}).ToList();
         }
+
+        public string[] GetPropertiesValues(string name)
+        {
+            var s = new List<String>();
+            
+            foreach (var b in Boards)
+            {
+                foreach (var p in b.Properties.Where(p => p.Name == name))
+                {
+                    if(!s.Contains(p.Value))
+                        s.Add(p.Value);
+                    break;
+                }
+            }
+
+            s.Sort();
+            return s.ToArray();
+        }
     }
 
     internal struct Property
