@@ -113,12 +113,12 @@ namespace AvrDudeReset
 
         static void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Console.Error.Write(ReplaceWrappedExeName(e.Data));
+            Console.Error.WriteLine(ReplaceWrappedExeName(e.Data));
         }
 
         static void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Console.Write(ReplaceWrappedExeName(e.Data));
+            Console.WriteLine(ReplaceWrappedExeName(e.Data));
         }
 
         private static string ReplaceWrappedExeName(string text)
