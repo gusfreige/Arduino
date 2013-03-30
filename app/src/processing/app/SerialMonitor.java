@@ -36,6 +36,7 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
   private JScrollPane scrollPane;
   private JTextField textField;
   private JButton sendButton;
+  private JButton resetButton;
   private JCheckBox autoscrollBox;
   private JCheckBox clearscreenBox;
   private JCheckBox enabledBox;
@@ -98,11 +99,20 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
       public void actionPerformed(ActionEvent e) {
         send(textField.getText());
         textField.setText("");
+        textField.requestFocus();
+      }});
+      
+    resetButton = new JButton(_("Reset"));
+    resetButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        send(null);
+        textField.requestFocus();
       }});
     
     pane.add(textField);
     pane.add(Box.createRigidArea(new Dimension(4, 0)));
     pane.add(sendButton);
+    pane.add(resetButton);
     
     getContentPane().add(pane, BorderLayout.NORTH);
     
@@ -198,13 +208,25 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
   }
 
   private void send(String s) {
-    if (serial != null) {
-      switch (lineEndings.getSelectedIndex()) {
-        case 1: s += "\n"; break;
-        case 2: s += "\r"; break;
-        case 3: s += "\r\n"; break;
+    if (serial != null) 
+    {
+      if(s==null)
+      {
+        // Reset the board
+        serial.setDTR(true);
+        //serial.write(new byte[] {0x00});
+        serial.setDTR(false);
       }
-      serial.write(s);
+      else
+      {  
+        switch (lineEndings.getSelectedIndex()) 
+        {
+          case 1: s += "\n"; break;
+          case 2: s += "\r"; break;
+          case 3: s += "\r\n"; break;
+        }
+        serial.write(s);
+      }
     }
   }
   
