@@ -911,7 +911,8 @@ public class AutoFormat implements Tool {
 
       reader.close(); // close buff
 
-      String formattedText = strOut.toString();
+      String formattedText = strOut.toString().replaceAll("(?sm)[ \t]+$", "");
+      
       if (formattedText.equals(originalText)) {
         editor.statusNotice(_("No changes necessary for Auto Format."));
 
