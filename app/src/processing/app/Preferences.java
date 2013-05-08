@@ -191,6 +191,7 @@ public class Preferences {
   JComboBox comboFont;
   JCheckBox openMonitorBox;
   JCheckBox alwaysReuseWindowBox;
+  JCheckBox doNotMoveCaret;
   
   // the calling editor, so updates can be applied
 
@@ -464,9 +465,9 @@ public class Preferences {
       top += d.height + GUI_BETWEEN;
     }
 
-	// [ ] Open the monitor
+	  // [ ] Open the monitor
 	
-	openMonitorBox = new JCheckBox(_("Open the Serial Monitor automatically when uploading as default *"));
+	  openMonitorBox = new JCheckBox(_("Open the Serial Monitor automatically when uploading as default *"));
     pain.add(openMonitorBox);
     d = openMonitorBox.getPreferredSize();
     openMonitorBox.setBounds(left, top, d.width + 10, d.height);
@@ -479,6 +480,15 @@ public class Preferences {
     pain.add(alwaysReuseWindowBox);
     d = alwaysReuseWindowBox.getPreferredSize();
     alwaysReuseWindowBox.setBounds(left, top, d.width + 10, d.height);
+    right = Math.max(right, left + d.width);
+    top += d.height + GUI_BETWEEN;   
+      
+    // [ ] Do not move the caret inside the setup function when opening a Sketch
+    
+    doNotMoveCaret = new JCheckBox(_("Do not move the caret inside the setup function when opening a Sketch"));
+    pain.add(doNotMoveCaret);
+    d = doNotMoveCaret.getPreferredSize();
+    doNotMoveCaret.setBounds(left, top, d.width + 10, d.height);
     right = Math.max(right, left + d.width);
     top += d.height + GUI_BETWEEN;   
 
@@ -633,6 +643,8 @@ public class Preferences {
     setBoolean("upload.verify", verifyUploadBox.isSelected());
     setBoolean("serial.open_monitor", openMonitorBox.isSelected());
     setBoolean("editor.window.reuse", alwaysReuseWindowBox.isSelected());
+    setBoolean("editor.window.legacy_caret_position", doNotMoveCaret.isSelected());
+    
     
 //    setBoolean("sketchbook.closing_last_window_quits",
 //               closingLastQuitsBox.isSelected());
@@ -699,7 +711,8 @@ public class Preferences {
     verifyUploadBox.setSelected(getBoolean("upload.verify"));
     openMonitorBox.setSelected(getBoolean("serial.open_monitor"));
     alwaysReuseWindowBox.setSelected(getBoolean("editor.window.reuse"));
-
+    doNotMoveCaret.setSelected(getBoolean("editor.window.legacy_caret_position"));
+    
     //closingLastQuitsBox.
     //  setSelected(getBoolean("sketchbook.closing_last_window_quits"));
     //sketchPromptBox.

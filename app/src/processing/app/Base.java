@@ -575,6 +575,9 @@ public class Base {
 
   private void findInsertPoint(Editor editor)
   {
+    if(Preferences.getBoolean("editor.window.legacy_caret_position"))
+      return;
+    
     // Find the start point
     String t = editor.getText();
     
@@ -667,7 +670,6 @@ public class Base {
       handleNewReplaceImpl();
     }
   }
-
 
   /**
    * Prompt for a sketch to open, and open it in a new window.
