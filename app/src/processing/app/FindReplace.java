@@ -308,7 +308,7 @@ public class FindReplace extends JFrame implements ActionListener {
   // once found, select it (and go to that line)
 
   private boolean find(boolean wrap,boolean backwards,boolean searchTabs,int originTab) {
-System.out.println("Find: " + originTab);
+    //System.out.println("Find: " + originTab);
 	boolean wrapNeeded = false;
     String search = findField.getText();
     //System.out.println("finding for " + search + " " + findString);
