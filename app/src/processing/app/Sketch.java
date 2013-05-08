@@ -1647,7 +1647,7 @@ public class Sketch {
     long maxram = s==null?-1:Integer.parseInt(s);
 
     s =  Preferences.get("boards." + Preferences.get("board") + ".upload.warning_ram_size");
-    long warningram = maxram==-1?-1:(s==null?maxram/2:Integer.parseInt(s));
+    long warningram = maxram==-1?-1:(s==null?(maxram/5)*4:Integer.parseInt(s));
 
     Sizer sizer = new Sizer(buildPath, suggestedClassName);
     try {
