@@ -606,6 +606,10 @@ implements TabExpander, Printable
       paintSyntaxLine(gfx,tokenMarker,line,defaultFont,
                       defaultColor,x,y);
     }
+    
+    // Line numbers
+    //gfx.drawString((line+1)+"",2,y + fm.getHeight());
+
   }
 
   protected void paintPlainLine(Graphics gfx, int line, Font defaultFont,
