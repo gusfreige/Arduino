@@ -131,6 +131,7 @@ public class Editor extends JFrame implements RunnerListener {
   boolean running;
   //boolean presenting;
   boolean uploading;
+  String hexPath;
 
   // undo fellers
   JMenuItem undoItem, redoItem;
@@ -805,6 +806,14 @@ public class Editor extends JFrame implements RunnerListener {
       }
     });
     menu.add(item);
+    
+    /*item = new JMenuItem(_("Burn Hex file..."));
+    item.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        handleBurnHexFile();
+      }
+    });
+    menu.add(item);*/
         
     menu.addMenuListener(new MenuListener() {
       public void menuCanceled(MenuEvent e) {}
@@ -2576,6 +2585,34 @@ public class Editor extends JFrame implements RunnerListener {
     }
   }
 
+  protected void handleBurnHexFile() {
+    console.clear();
+    
+    hexPath = base.handleOpenHexPrompt();
+    if(hexPath.length()==0)
+      return;
+    
+    statusNotice(_("Burning your Hex file to I/O Board (this may take a minute)..."));
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        try {
+          Uploader uploader = new AvrdudeUploader();
+          if (uploader.uploadUsingPreferences(hexPath, "", true)) {
+            statusNotice(_("Done burning the hex file."));
+          } else {
+            statusError(_("Error while burning the hex file."));
+            // error message will already be visible
+          }
+        } catch (RunnerException e) {
+          //statusError(_("Error while burning the hex file."));
+          //e.printStackTrace();
+          //statusError(e);
+        } catch (Exception e) {
+          statusError(_("Error while burning the hex file."));
+          e.printStackTrace();
+        }
+      }});
+  }
 
   protected void handleBurnBootloader() {
     console.clear();
@@ -2591,8 +2628,8 @@ public class Editor extends JFrame implements RunnerListener {
             // error message will already be visible
           }
         } catch (RunnerException e) {
-          statusError(_("Error while burning bootloader."));
-          e.printStackTrace();
+          //statusError(_("Error while burning bootloader."));
+          //e.printStackTrace();
           //statusError(e);
         } catch (Exception e) {
           statusError(_("Error while burning bootloader."));

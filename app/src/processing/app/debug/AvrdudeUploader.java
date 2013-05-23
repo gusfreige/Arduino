@@ -60,7 +60,11 @@ public class AvrdudeUploader extends Uploader  {
       }
       
       Collection params = getProgrammerCommands(target, programmer);
-      params.add("-Uflash:w:" + buildPath + File.separator + className + ".hex:i");
+      
+      if(className.length()==0) // Support upload of plain hex files
+        params.add("-Uflash:w:" + buildPath + ":i");
+      else  
+        params.add("-Uflash:w:" + buildPath + File.separator + className + ".hex:i");
       return avrdude(params);
     }
 
@@ -87,6 +91,7 @@ public class AvrdudeUploader extends Uploader  {
     // sketch.
     if (boardPreferences.get("bootloader.path") != null &&
         (boardPreferences.get("bootloader.path").equals("caterina") ||
+         boardPreferences.get("bootloader.path").equals("caterina-Arduino_Robot") ||
          boardPreferences.get("bootloader.path").equals("caterina-LilyPadUSB"))) {
       String caterinaUploadPort = null;
       try {
@@ -182,6 +187,7 @@ public class AvrdudeUploader extends Uploader  {
     // bootloader port.
     if (true == avrdudeResult && boardPreferences.get("bootloader.path") != null &&
         (boardPreferences.get("bootloader.path").equals("caterina") ||
+         boardPreferences.get("bootloader.path").equals("caterina-Arduino_Robot") ||
          boardPreferences.get("bootloader.path").equals("caterina-LilyPadUSB"))) {
       try {
         Thread.sleep(500);

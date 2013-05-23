@@ -42,9 +42,9 @@ import static processing.app.I18n._;
  * files and images, etc) that comes from that.
  */
 public class Base {
-  public static final int REVISION = 104;
+  public static final int REVISION = 105;
   /** This might be replaced by main() if there's a lib/version.txt file. */
-  static String VERSION_NAME = "0104";
+  static String VERSION_NAME = "0105";
   /** Set true if this a proper release rather than a numbered revision. */
   static public boolean RELEASE = false;
 
@@ -672,6 +672,38 @@ public class Base {
   }
 
   /**
+   * Prompt for a hex file to upload to the board.
+   */
+  public String handleOpenHexPrompt() {
+    // get the frontmost window frame for placing file dialog
+    FileDialog fd = new FileDialog(activeEditor,
+                                   _("Open an Hex File..."),
+                                   FileDialog.LOAD);
+    // This was annoying people, so disabled it in 0125.
+    //fd.setDirectory(Preferences.get("sketchbook.path"));
+    //fd.setDirectory(getSketchbookPath());
+
+    // Only show .pde files as eligible bachelors
+    fd.setFilenameFilter(new FilenameFilter() {
+        public boolean accept(File dir, String name) {
+          // TODO this doesn't seem to ever be used. AWESOME.
+          //System.out.println("check filter on " + dir + " " + name);
+          return name.toLowerCase().endsWith(".hex");
+        }
+      });
+
+    fd.setVisible(true);
+
+    String directory = fd.getDirectory();
+    String filename = fd.getFile();
+
+    // User canceled selection
+    if (filename == null) return "";
+
+    return (new File(directory, filename)).getAbsolutePath();
+  }
+
+  /**
    * Prompt for a sketch to open, and open it in a new window.
    */
   public void handleOpenPrompt() {
@@ -1211,7 +1243,6 @@ public class Base {
         } else {
         // not a sketch folder, but maybe a subfolder containing sketches
         JMenu submenu = new JMenu(list[i]);
-        //MenuScroller.setScrollerFor(submenu);
         // needs to be separate var
         // otherwise would set ifound to false
         boolean found = addSketches(submenu, subfolder, replaceExisting);
