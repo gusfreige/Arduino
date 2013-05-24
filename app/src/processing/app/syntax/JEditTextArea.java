@@ -314,7 +314,6 @@ public class JEditTextArea extends JComponent
       //horizontal.setUnitIncrement(painter.getFontMetrics().charWidth('w'));
       horizontal.setUnitIncrement(charWidth);
       horizontal.setBlockIncrement(width / 2);
-      setHorizontalOffset();
     }
   }
 
@@ -365,14 +364,6 @@ public class JEditTextArea extends JComponent
   public final int getHorizontalOffset() {
     return horizontalOffset;
   }
-  
-  
-  /**
-   * Returns if the line numbers are enabled or no.
-   */
-  public final boolean getLineNumbersEnabled() {
-    return lineNumbersEnabled;
-  }
 
   /**
    * Sets the horizontal offset of drawn lines. This can be used to
@@ -380,24 +371,7 @@ public class JEditTextArea extends JComponent
    * @param horizontalOffset offset The new horizontal offset
    */
   public void setHorizontalOffset(int horizontalOffset)
-  { 
-    internalHorizontalOffset = horizontalOffset;
-    FontMetrics fm = painter.getFontMetrics();
-
-    setInternalHorizontalOffset(horizontalOffset+
-      (getLineNumbersEnabled()?(int)((Math.floor(Math.log10(this.getLineCount()+this.firstLine))+3)*fm.charWidth('0')):0));
-  }
-  
-    /**
-   * Refreshes the horizontal offset of drawn lines (to keep updated the line numbers, if any).
-   */
-  public void setHorizontalOffset()
   {
-    setHorizontalOffset(internalHorizontalOffset);
-  }
-   
-  private void setInternalHorizontalOffset(int horizontalOffset)
-  {   
     if(horizontalOffset == this.horizontalOffset)
       return;
     this.horizontalOffset = horizontalOffset;
@@ -1805,8 +1779,6 @@ public class JEditTextArea extends JComponent
   protected int electricScroll;
 
   protected int horizontalOffset;
-  protected int internalHorizontalOffset;
-  protected boolean lineNumbersEnabled = false;
 
   protected JScrollBar vertical;
   protected JScrollBar horizontal;
@@ -2086,7 +2058,7 @@ public class JEditTextArea extends JComponent
             if(evt.getAdjustable() == vertical)
               setFirstLine(vertical.getValue());
             else
-              setInternalHorizontalOffset(-horizontal.getValue());
+              setHorizontalOffset(-horizontal.getValue());
           }
         });
     }
