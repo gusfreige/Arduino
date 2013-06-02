@@ -807,13 +807,13 @@ public class Editor extends JFrame implements RunnerListener {
     });
     menu.add(item);
     
-    /*item = new JMenuItem(_("Burn Hex file..."));
+    item = new JMenuItem(_("Burn Hex file..."));
     item.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         handleBurnHexFile();
       }
     });
-    menu.add(item);*/
+    menu.add(item);
         
     menu.addMenuListener(new MenuListener() {
       public void menuCanceled(MenuEvent e) {}
